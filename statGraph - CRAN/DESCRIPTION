@@ -1,0 +1,42 @@
+Package: statGraph
+Type: Package
+Title: Statistical Methods for Graphs
+Author: Suzana S. Santos [aut],
+  Eduardo S. Lira [aut],
+  Andre Fujita [aut, cre]
+Maintainer: Andre Fujita <fujita@ime.usp.br>
+Depends: R (>= 2.10.0), stats, graphics
+Imports: igraph, MASS
+Description: Contains statistical methods to analyze graphs, such as
+        graph parameter estimation, model selection based on the GIC
+        (Graph Information Criterion), statistical tests to
+        discriminate two or more populations of graphs (ANOGVA -
+        Analysis of Graph Variability), correlation between graphs, and
+        clustering of graphs. References: Takahashi et al. (2012)
+        <doi:10.1371/journal.pone.0049949>, Futija et al. (2017)
+        <doi:10.3389/fnins.2017.00066>, Fujita et al. (2017)
+        <doi:10.1016/j.csda.2016.11.016>, Tang et al. (2017)
+        <doi:10.3150/15-BEJ789>, Tang et al. (2017)
+        <doi:10.1080/10618600.2016.1193505>, Ghoshdastidar et al.
+        (2017) <arXiv:1705.06168>, Ghoshdastidar et al. (2017)
+        <arXiv:1707.00833>, Cerqueira et al. (2017)
+        <doi:10.1109/TNSE.2017.2674026>, Fraiman and Fraiman (2018)
+        <doi:10.1038/s41598-018-23152-5>, Fujita et al. (2019)
+        <doi:10.1093/comnet/cnz028>.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyLoad: yes
+URL: https://www.ime.usp.br/~fujita/software.html
+Authors@R: c(person(given="Suzana S.", family="Santos",
+        email="suzana@ime.usp.br", role=c("aut")),
+        person(given="Eduardo S.", family="Lira",
+        email="edulira@ime.usp.br",
+        role=c("aut")),person(given="Andre",family="Fujita",
+        email="fujita@ime.usp.br", role=c("aut", "cre")))
+Version: 0.3.0
+Date: 2019-10-23
+RoxygenNote: 6.1.1
+NeedsCompilation: no
+Packaged: 2019-10-23 12:56:19 UTC; su
+Repository: CRAN
+Date/Publication: 2019-10-24 08:30:02 UTC

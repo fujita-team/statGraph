@@ -1,0 +1,14 @@
+bibentry("Manual",
+    title="statGraph: Statistical Methods for Graphs",
+    author="Suzana S. Santos and Eduardo S. Lira and Andre Fujita",
+    year="2019",
+    note="(Version 0.3.0)",
+    url="https://www.ime.usp.br/~fujita/software.html",
+
+    textVersion =
+    paste("Santos, SS., Lira, ES. & Fujita, A. (2019). ",
+        "statGraph: Statistical Methods for Graphs (Version 0.3.0). ",
+        "Available from https://www.ime.usp.br/~fujita/software.html",
+        sep=""),
+
+    mheader = "To cite statGraph in publications use:")
