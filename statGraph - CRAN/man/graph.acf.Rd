@@ -41,6 +41,6 @@ graph.acf(x, plot=TRUE)
 \references{
 Fujita, A., Takahashi, D. Y., Balardin, J. B., Vidal, M. C. and Sato, J. R.
 (2017) Correlation between graphs with an application to brain network
-analysis. _Computational Statistics & Data Analysis_ *109*, 76–92.
+analysis. \emph{Computational Statistics & Data Analysis} \emph{109}, 76–92.
 }
 \keyword{autocorrelation}

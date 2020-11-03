@@ -4,8 +4,14 @@
 \alias{ghoshdastidar}
 \title{Ghoshdastidar hypothesis testing for large random graphs.}
 \usage{
-ghoshdastidar(x, y, maxPer = 300, alpha = 0.05, two.sample = FALSE,
-  printResult = FALSE)
+ghoshdastidar(
+  x,
+  y,
+  maxPer = 300,
+  alpha = 0.05,
+  two.sample = FALSE,
+  printResult = FALSE
+)
 }
 \arguments{
 \item{x}{the first list of undirected graphs to be compared. Must be a list of matrices or igraph objects.}

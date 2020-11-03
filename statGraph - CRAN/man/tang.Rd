@@ -4,27 +4,34 @@
 \alias{tang}
 \title{Tang hypothesis testing for random graphs.}
 \usage{
-tang(G1, G2, dim, sigma = NULL, alpha = 0.05, bootstrap_sample = 200,
-  printResult = FALSE)
+tang(
+  G1,
+  G2,
+  dim,
+  sigma = NULL,
+  alpha = 0.05,
+  bootstrap_sample = 200,
+  printResult = FALSE
+)
 }
 \arguments{
-\item{G1}{the first undirected graph to be compared. Must be an igraph 
+\item{G1}{the first undirected graph to be compared. Must be an igraph
 object.}
 
-\item{G2}{the second undirected graph to be compared. Must be an igraph 
+\item{G2}{the second undirected graph to be compared. Must be an igraph
 object.}
 
 \item{dim}{dimension of the adjacency spectral embedding.}
 
-\item{sigma}{a real value indicating the kernel bandwidth. If NULL (default) 
+\item{sigma}{a real value indicating the kernel bandwidth. If NULL (default)
 the bandwidth is calculated by the method.}
 
 \item{alpha}{the significance level for the test (default is 0.05).}
 
-\item{bootstrap_sample}{integer indicating the number of bootstrap resamples 
+\item{bootstrap_sample}{integer indicating the number of bootstrap resamples
 (default is 200).}
 
-\item{printResult}{logical indicating if the test must print the result 
+\item{printResult}{logical indicating if the test must print the result
 (default is FALSE).}
 }
 \value{
@@ -36,8 +43,8 @@ A list containing:
 \item{bootstrap_samples}{The test distrition on the bootstrap resamples.}
 }
 \description{
-Given two independent finite-dimensional random dot product graphs, 'tang' 
-tests if they have generating latent positions that are drawn from the same 
+Given two independent finite-dimensional random dot product graphs, 'tang'
+tests if they have generating latent positions that are drawn from the same
 distribution.
 }
 \examples{
@@ -60,10 +67,10 @@ D <- tang(g1,g2, 5, printResult = TRUE)
 
 }
 \references{
-Tang, Minh, et al. "A nonparametric two-sample hypothesis testing problem for 
+Tang, Minh, et al. "A nonparametric two-sample hypothesis testing problem for
 random graphs." Bernoulli 23.3 (2017): 1599-1630.
 
-Tang, Minh, et al. "A semiparametric two-sample hypothesis testing problem 
-for random graphs." Journal of Computational and Graphical Statistics 26.2 
+Tang, Minh, et al. "A semiparametric two-sample hypothesis testing problem
+for random graphs." Journal of Computational and Graphical Statistics 26.2
 (2017): 344-354.
 }

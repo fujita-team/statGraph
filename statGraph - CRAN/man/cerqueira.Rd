@@ -2,40 +2,40 @@
 % Please edit documentation in R/statGraph.R
 \name{cerqueira}
 \alias{cerqueira}
-\title{Andressa Cerqueira, Daniel Fraiman, Claudia D. Vargas and Florencia Leonardi 
-non-parametric test of hypotheses to verify if two samples of random graphs 
+\title{Andressa Cerqueira, Daniel Fraiman, Claudia D. Vargas and Florencia Leonardi
+non-parametric test of hypotheses to verify if two samples of random graphs
 were originated from the same probability distribution.}
 \usage{
 cerqueira(g, gp, maxPer = 300, alpha = 0.05, printResult = FALSE)
 }
 \arguments{
-\item{g}{the first iid sample of graphs to be compared. Must be a list of 
+\item{g}{the first iid sample of graphs to be compared. Must be a list of
 igraph objects.}
 
-\item{gp}{the second iid sample of graphs to be compared. Must be a list of 
+\item{gp}{the second iid sample of graphs to be compared. Must be a list of
 igraph objects.}
 
-\item{maxPer}{integer indicating the number of bootstrap resamples (default 
+\item{maxPer}{integer indicating the number of bootstrap resamples (default
 is 300).}
 
 \item{alpha}{the significance level for the test (default is 0.05).}
 
-\item{printResult}{logical indicating if the test must print the result 
+\item{printResult}{logical indicating if the test must print the result
 (default is FALSE).}
 }
 \value{
 A list containing:
 \item{test_stats}{the value of the test.}
 \item{p_value}{the p-value of the test.}
-\item{reject_threshold}{The 1-alpha quantile of the test distribution under 
+\item{reject_threshold}{The 1-alpha quantile of the test distribution under
 the null hypothesys.}
 \item{bootstrap_samples}{The test distrition on the bootstrap resamples.}
 }
 \description{
-Given two identically independently distributed (idd) samples of graphs g and 
-gp, the test verifies if they have the same distribution by calculating the 
+Given two identically independently distributed (idd) samples of graphs g and
+gp, the test verifies if they have the same distribution by calculating the
 mean distance D from g to gp. The test rejects the null hypothesis if D is
-greater than the (1-alpha)-quantile of the distribution of the test under the 
+greater than the (1-alpha)-quantile of the distribution of the test under the
 null hypothesis.
 }
 \examples{
@@ -60,7 +60,7 @@ k <- cerqueira(a, b, printResult = TRUE)
 
 }
 \references{
-Andressa Cerqueira, Daniel Fraiman, Claudia D. Vargas and Florencia Leonardi. 
+Andressa Cerqueira, Daniel Fraiman, Claudia D. Vargas and Florencia Leonardi.
 "A test of hypotheses for random graph distributions built from EEG data",
 https://ieeexplore.ieee.org/document/7862892
 }

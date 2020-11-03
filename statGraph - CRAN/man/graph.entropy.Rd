@@ -7,13 +7,14 @@
 graph.entropy(A = NULL, bandwidth = "Silverman", eigenvalues = NULL)
 }
 \arguments{
-\item{A}{the adjacency matrix of the graph. For an unweighted graph it
+\item{A}{the adjacency matrix of the graph. For an unweighted graph, it
 contains only 0s and 1s. For a weighted graph, it may contain nonnegative
-real values that correspond to the weights of the edges.}
+real numbers that correspond to the weights of the edges.}
 
-\item{bandwidth}{string indicating which criterion will be used to choose
-the bandwidth during the spectral density estimation. The available criteria
-are "Silverman" (default) and "Sturges".}
+\item{bandwidth}{string showing which criterion is used to choose the
+bandwidth during the spectral density estimation. Choose between the
+following criteria: "Silverman" (default), "Sturges" and "bcv".
+"bcv" is an abbreviation of biased cross-validation.}
 
 \item{eigenvalues}{optional parameter. It contains the eigenvalues of matrix
 A. Then, if the eigenvalues of matrix A have already been computed, this
@@ -24,12 +25,11 @@ eigenvalues of A will be computed by 'graph.entropy'.}
 a real number corresponding to the graph spectral entropy.
 }
 \description{
-'graph.entropy' returns the spectral entropy of a given undirected graph.
+'graph.entropy' returns the spectral entropy of an undirected graph.
 }
 \examples{
-require(igraph)
-G <- erdos.renyi.game(100, p=0.5)
-A <- as.matrix(get.adjacency(G))
+G <- igraph::sample_gnp(n=100, p=0.5)
+A <- as.matrix(igraph::get.adjacency(G))
 entropy <- graph.entropy(A)
 entropy
 
@@ -37,12 +37,12 @@ entropy
 \references{
 Takahashi, D. Y., Sato, J. R., Ferreira, C. E. and Fujita A. (2012)
 Discriminating Different Classes of Biological Networks by Analyzing the
-Graph Spectra  Distribution. _PLoS ONE_, *7*, e49949.
+Graph Spectra  Distribution. \emph{PLoS ONE}, \emph{7}, e49949.
 doi:10.1371/journal.pone.0049949.
 
-Silverman, B. W. (1986) _Density Estimation_.  London: Chapman and Hall.
+Silverman, B. W. (1986) \emph{Density Estimation}.  London: Chapman and Hall.
 
-Sturges, H. A. The Choice of a Class Interval. _J. Am. Statist. Assoc._,
-*21*, 65-66.
+Sturges, H. A. The Choice of a Class Interval. \emph{J. Am. Statist. Assoc.},
+\emph{21}, 65-66.
 }
 \keyword{spectral_entropy}
