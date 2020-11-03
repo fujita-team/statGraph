@@ -49,6 +49,6 @@ graph.cor.test(x, y)
 \references{
 Fujita, A., Takahashi, D. Y., Balardin, J. B., Vidal, M. C. and Sato, J. R.
 (2017) Correlation between graphs with an application to brain network
-analysis. \emph{Computational Statistics & Data Analysis} \emph{109}, 76–92.
+analysis. _Computational Statistics & Data Analysis_ *109*, 76–92.
 }
 \keyword{correlation_coefficient}

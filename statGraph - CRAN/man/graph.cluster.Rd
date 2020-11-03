@@ -25,7 +25,7 @@ the bandwidth for the spectral density estimation. The available criteria are
 }
 \value{
 A list containing:
-\item{hclust}{an object of class \emph{hclust} which describes the tree produced
+\item{hclust}{an object of class *hclust* which describes the tree produced
 by the clustering process.}
 \item{cluster}{the clustering labels for each graph.}
 }
@@ -56,12 +56,12 @@ graph.cluster(g, 3)
 \references{
 Takahashi, D. Y., Sato, J. R., Ferreira, C. E. and Fujita A. (2012)
 Discriminating Different Classes of Biological Networks by Analyzing the
-Graph Spectra  Distribution. \emph{PLoS ONE}, \emph{7}, e49949.
+Graph Spectra  Distribution. _PLoS ONE_, *7*, e49949.
 doi:10.1371/journal.pone.0049949.
 
-Silverman, B. W. (1986) \emph{Density Estimation}.  London: Chapman and Hall.
+Silverman, B. W. (1986) _Density Estimation_.  London: Chapman and Hall.
 
-Sturges, H. A. The Choice of a Class Interval. \emph{J. Am. Statist. Assoc.},
-\emph{21}, 65-66.
+Sturges, H. A. The Choice of a Class Interval. _J. Am. Statist. Assoc._,
+*21*, 65-66.
 }
 \keyword{clustering}

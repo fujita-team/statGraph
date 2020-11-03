@@ -50,17 +50,17 @@ result
 }
 \references{
 Fujita, A., Vidal, M. C. and Takahashi, D. Y. (2017) A Statistical Method to
-Distinguish Functional Brain Networks. \emph{Front. Neurosci.}, \emph{11}, 66.
+Distinguish Functional Brain Networks. _Front. Neurosci._, *11*, 66.
 doi:10.3389/fnins.2017.00066.
 
 Takahashi, D. Y., Sato, J. R., Ferreira, C. E. and Fujita A. (2012)
 Discriminating Different Classes of Biological Networks by Analyzing the
-Graph Spectra  Distribution. \emph{PLoS ONE}, \emph{7}, e49949.
+Graph Spectra  Distribution. _PLoS ONE_, *7*, e49949.
 doi:10.1371/journal.pone.0049949.
 
-Silverman, B. W. (1986) \emph{Density Estimation}.  London: Chapman and Hall.
+Silverman, B. W. (1986) _Density Estimation_.  London: Chapman and Hall.
 
-Sturges, H. A. The Choice of a Class Interval. \emph{J. Am. Statist. Assoc.},
-\emph{21}, 65-66.
+Sturges, H. A. The Choice of a Class Interval. _J. Am. Statist. Assoc._,
+*21*, 65-66.
 }
 \keyword{analysis_of_graph_variability}

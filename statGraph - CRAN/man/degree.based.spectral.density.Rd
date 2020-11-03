@@ -19,15 +19,15 @@ degree.based.spectral.density(
 
 \item{to}{Upper end of the interval that contains the eigenvalues or largest eigenvalue of the adjacency matrix of the graph. If this parameter values is null, then the largest eigenvalue is used.}
 
-\item{npoints}{The number of discretization points of the interval '\link{from, to}'.}
+\item{npoints}{The number of discretization points of the interval '[from, to]'.}
 
 \item{numCores}{Number of cores to use for parallelization.}
 }
 \value{
-Returns the degree-based spectral density of the graph in the interval '\link{from, to}' discretized using 'npoints'.
+Returns the degree-based spectral density of the graph in the interval '[from, to]' discretized using 'npoints'.
 }
 \description{
-'degree.based.spectral.density' returns the degree-based spectral density in the interval '\link{from, to}' by using 'npoints' discretization points.
+'degree.based.spectral.density' returns the degree-based spectral density in the interval '[from, to]' by using 'npoints' discretization points.
 }
 \examples{
 G <- igraph::sample_smallworld(dim = 1, size = 10, nei = 2, p = 0.2)

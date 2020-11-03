@@ -41,7 +41,7 @@ If 'model' is an string, then the default values are used for the predefined mod
 
 \item{to}{Upper end of the interval that contain the eigenvalues to generate the degree-based spectral densities. If this value is null, the largest eigenvalue of the adjacency matrix corresponding to 'Graph' is then used.}
 
-\item{npoints}{The number of points to discretize the interval '\link{from, to}'.}
+\item{npoints}{The number of points to discretize the interval '[from, to]'.}
 
 \item{numCores}{The number of cores to use for parallelization.}
 }
