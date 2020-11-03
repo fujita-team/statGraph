@@ -4,9 +4,16 @@
 \alias{graph.param.estimator}
 \title{Graph parameter estimator}
 \usage{
-graph.param.estimator(A, model, parameters = NULL, eps = 0.01,
-  bandwidth = "Silverman", eigenvalues = NULL, spectra = NULL,
-  classic = FALSE)
+graph.param.estimator(
+  A,
+  model,
+  parameters = NULL,
+  eps = 0.01,
+  bandwidth = "Silverman",
+  eigenvalues = NULL,
+  spectra = NULL,
+  classic = FALSE
+)
 }
 \arguments{
 \item{A}{the adjacency matrix of the graph. For an unweighted graph it

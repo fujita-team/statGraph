@@ -2,21 +2,21 @@
 % Please edit documentation in R/statGraph.R
 \name{fraiman}
 \alias{fraiman}
-\title{Daniel Fraiman and Ricardo Fraiman test for network differences between 
+\title{Daniel Fraiman and Ricardo Fraiman test for network differences between
 groups with an analysis of variance test (ANOVA).}
 \usage{
 fraiman(g, maxPer = 300, alpha = 0.05, printResult = FALSE)
 }
 \arguments{
-\item{g}{the undirected graphs to be compared. Must be a list of lists of 
+\item{g}{the undirected graphs to be compared. Must be a list of lists of
 igraph objects or a list of lists of adjacency matrices.}
 
-\item{maxPer}{integer indicating the number of bootstrap resamples 
+\item{maxPer}{integer indicating the number of bootstrap resamples
 (default is 300).}
 
 \item{alpha}{the significance level for the test (default is 0.05).}
 
-\item{printResult}{logical indicating if the test must print the result 
+\item{printResult}{logical indicating if the test must print the result
 (default is FALSE).}
 }
 \value{
@@ -26,9 +26,9 @@ A list containing:
 \item{bootstrap_samples}{The test distrition on the bootstrap resamples.}
 }
 \description{
-Given a list of graphs, the test verifies if all the subpopulations have the 
+Given a list of graphs, the test verifies if all the subpopulations have the
 same mean network,
-under the alternative that at least one subpopulation has a different mean 
+under the alternative that at least one subpopulation has a different mean
 network.
 }
 \examples{
@@ -55,7 +55,7 @@ k <- fraiman(d, printResult = TRUE)
 
 }
 \references{
-Fraiman, Daniel, and Ricardo Fraiman. "An ANOVA approach for statistical 
-comparisons of brain networks", 
+Fraiman, Daniel, and Ricardo Fraiman. "An ANOVA approach for statistical
+comparisons of brain networks",
 https://www.nature.com/articles/s41598-018-23152-5
 }

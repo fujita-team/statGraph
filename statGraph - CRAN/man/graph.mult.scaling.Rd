@@ -4,8 +4,14 @@
 \alias{graph.mult.scaling}
 \title{Multidimensional scaling of graphs}
 \usage{
-graph.mult.scaling(x, plot = TRUE, bandwidth = "Silverman",
-  type = "n", main = "", ...)
+graph.mult.scaling(
+  x,
+  plot = TRUE,
+  bandwidth = "Silverman",
+  type = "n",
+  main = "",
+  ...
+)
 }
 \arguments{
 \item{x}{a list of adjacency (symmetric) matrices of undirected graphs. For

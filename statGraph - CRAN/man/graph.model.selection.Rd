@@ -4,8 +4,14 @@
 \alias{graph.model.selection}
 \title{Graph model selection}
 \usage{
-graph.model.selection(A, models = NULL, parameters = NULL,
-  eps = 0.01, bandwidth = "Silverman", eigenvalues = NULL)
+graph.model.selection(
+  A,
+  models = NULL,
+  parameters = NULL,
+  eps = 0.01,
+  bandwidth = "Silverman",
+  eigenvalues = NULL
+)
 }
 \arguments{
 \item{A}{the adjacency (symmetric) matrix of an undirected graph. For an
