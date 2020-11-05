@@ -21,7 +21,7 @@ contains real values that correspond to the weights of the edges.}
 \item{models}{either a vector of strings, a list of functions or a list of
 arrays describing graph models:
 
-A vector of strings cotaining some of the following models: "ER" (Erdos-Renyi
+A vector of strings cotaining some of the following models: "ER" (Erdős–Rényi
 random graph), "GRG" (geometric random graph), "KR" (k regular random graph),
 "WS" (Watts-Strogatz model), and "BA" (Barabási-Albert model).
 
@@ -47,7 +47,7 @@ If the user does not provide the argument 'parameters', then default values
 are used for the predefined models ("ER", "GRG", "KR", "WS", and "BA").
 The default vector corresponds to a sequence from
 
-0 to 1 with step 'eps' for the "ER" model (Erdos-Renyi random graph), in
+0 to 1 with step 'eps' for the "ER" model (Erdős–Rényi random graph), in
 which the parameter corresponds to the probability to connect a pair of
 vertices;
 
@@ -86,7 +86,7 @@ corresponds to the Graph Information Criterion (GIC), i. e. the
 Kullback-Leibler divergence between the observed graph and the model.}
 }
 \description{
-'graph.model.selection' selects the graph model that best approximates the
+\code{graph.model.selection} selects the graph model that best approximates the
 observed graph according to the Graph Information Criterion (GIC).
 }
 \examples{

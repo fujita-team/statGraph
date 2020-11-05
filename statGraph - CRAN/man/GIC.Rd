@@ -26,7 +26,7 @@ components "x" and "y", which are numeric vectors of the same size. The "x"
 component contains the points at which the density was computed and the "y"
 component contains the observed density.
 
-A string that indicates one of the following models: "ER" (Erdos-Renyi random
+A string that indicates one of the following models: "ER" (Erdős–Rényi random
 graph), "GRG" (geometric random graph), "KR" (k regular random graph), "WS"
 (Watts-Strogatz model), and "BA" (Barabási-Albert model). When the argument
 'model' is a string, the user must also provides the model parameter by using
@@ -47,7 +47,7 @@ each column, and then will take the average density.}
 argument 'model' is a string or a function.
 For the predefined models ("ER", "GRG", "KR", "WS", and "BA"), the parameter
 the probability to connect a pair of vertices, for the "ER" model
-(Erdos-Renyi random graph);
+(Erdős–Rényi random graph);
 
 the radius used to construct the geometric graph in a unit square, for the
 "GRG" model (geometric random graph);
@@ -77,7 +77,7 @@ A real number corresponding to the Kullback-Leibler divergence or L2
 distance between the observed graph and the graph model.
 }
 \description{
-'GIC' returns the Kullback-Leibler divergence or L2 distance between an
+\code{GIC} returns the Kullback-Leibler divergence or L2 distance between an
 undirected graph and a given graph model.
 }
 \examples{

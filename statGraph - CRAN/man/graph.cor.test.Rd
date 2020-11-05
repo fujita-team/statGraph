@@ -23,7 +23,7 @@ real values that correspond to the weights of the edges.}
 \item{estimate}{the estimated measure of association 'rho'.}
 }
 \description{
-'graph.cor.test' tests for association between paired samples of graphs,
+\code{graph.cor.test} tests for association between paired samples of graphs,
 using Spearman's rho correlation coefficient.
 }
 \examples{
@@ -49,6 +49,6 @@ graph.cor.test(x, y)
 \references{
 Fujita, A., Takahashi, D. Y., Balardin, J. B., Vidal, M. C. and Sato, J. R.
 (2017) Correlation between graphs with an application to brain network
-analysis. _Computational Statistics & Data Analysis_ *109*, 76–92.
+analysis. _Computational Statistics & Data Analysis_ *109*, 76-92.
 }
 \keyword{correlation_coefficient}

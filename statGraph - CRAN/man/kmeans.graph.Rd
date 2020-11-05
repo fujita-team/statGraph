@@ -20,7 +20,7 @@ a vector of the same length of g containing the clusterization
 labels.
 }
 \description{
-'kmeans.graph' clusters graphs following a k-means algorithm based on the
+\code{kmeans.graph} clusters graphs following a k-means algorithm based on the
 Jensen-Shannon divergence between the spectral densities of the graphs.
 }
 \examples{

@@ -26,7 +26,7 @@ A list containing:
 \item{p.value}{the p-value of the test.}
 }
 \description{
-'anogva' statistically tests whether two or more sets of graphs are generated
+\code{anogva} statistically tests whether two or more sets of graphs are generated
 by the same random graph model. It is a generalization of the 'graph.test'
 function.
 }

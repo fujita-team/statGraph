@@ -18,7 +18,7 @@ edges.}
 An object of class acf.
 }
 \description{
-The function 'graph.acf' computes estimates of the autocorrelation function
+The function \code{graph.acf} computes estimates of the autocorrelation function
 for graphs.
 }
 \examples{
@@ -41,6 +41,6 @@ graph.acf(x, plot=TRUE)
 \references{
 Fujita, A., Takahashi, D. Y., Balardin, J. B., Vidal, M. C. and Sato, J. R.
 (2017) Correlation between graphs with an application to brain network
-analysis. _Computational Statistics & Data Analysis_ *109*, 76–92.
+analysis. _Computational Statistics & Data Analysis_ *109*, 76-92.
 }
 \keyword{autocorrelation}

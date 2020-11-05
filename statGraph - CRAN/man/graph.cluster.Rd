@@ -15,9 +15,9 @@ edges.}
 \item{k}{the number of clusters.}
 
 \item{method}{the agglomeration method to be used. This should be (an
-unambiguous abbreviation of) one of ‘"ward.D"’, ‘"ward.D2"’, ‘"single"’,
-‘"complete"’, ‘"average"’ (= UPGMA), ‘"mcquitty"’ (= WPGMA), ‘"median"’
-(= WPGMC) or ‘"centroid"’ (= UPGMC).}
+unambiguous abbreviation of) one of '"ward.D"', '"ward.D2"', '"single"',
+'"complete"', '"average"' (= UPGMA), '"mcquitty"' (= WPGMA), '"median"'
+(= WPGMC) or '"centroid"' (= UPGMC).}
 
 \item{bandwidth}{string indicating which criterion will be used to choose
 the bandwidth for the spectral density estimation. The available criteria are
@@ -30,7 +30,7 @@ by the clustering process.}
 \item{cluster}{the clustering labels for each graph.}
 }
 \description{
-Given a list of graphs, 'graph.cluster' builds a hierarchy of clusters
+Given a list of graphs, \code{graph.cluster} builds a hierarchy of clusters
 according to the Jensen-Shannon divergence between graphs.
 }
 \examples{

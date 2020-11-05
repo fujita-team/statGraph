@@ -11,8 +11,8 @@ gCEM(g, model, num_clusters, ncores = 1)
 clustered.}
 
 \item{model}{a string that indicates one of the following random graph
-models: "ER" (Erdos-Renyi random graph), "GRG" (geometric random graph), "KR"
-(k regular graph), "WS" (Watts-Strogatz model), and "BA" (Barab?si-Albert
+models: "ER" (Erdős–Rényi random graph), "GRG" (geometric random graph), "KR"
+(k regular graph), "WS" (Watts-Strogatz model), and "BA" (Barabási-Albert
 model).}
 
 \item{num_clusters}{an integer specifying the number of clusters.}
@@ -21,12 +21,12 @@ model).}
 default value is 1.}
 }
 \value{
-a list containing three fields:
+a vector containing two fields:
 labels a vector of the same length of g containing the clusterization labels;
 p a vector of length equals to num_clusters.
 }
 \description{
-'gCEM' clusters graphs following an expectation-maximization algorithm based
+\code{gCEM} clusters graphs following an expectation-maximization algorithm based
 on the Kullback-Leibler divergence between the spectral densities of the
 graph and of the random graph model.
 }
@@ -43,7 +43,7 @@ res
 
 }
 \references{
-Celeux, Gilles, and G?rard Govaert. "Gaussian parsimonious clustering
+Celeux, Gilles, and Gérard Govaert. "Gaussian parsimonious clustering
 models." Pattern recognition 28.5 (1995): 781-793.
 }
 \keyword{gCEM}

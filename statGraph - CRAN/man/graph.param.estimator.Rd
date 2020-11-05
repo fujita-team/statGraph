@@ -22,7 +22,7 @@ real values that correspond to the weights of the edges.}
 
 \item{model}{either a string or a function:
 
-A string that indicates one of the following models: "ER" (Erdos-Renyi random
+A string that indicates one of the following models: "ER" (Erdős–Rényi random
 graph), "GRG" (geometric random graph), "KR" (k regular random graph), "WS"
 (Watts-Strogatz model), and "BA" (Barabási-Albert model).
 
@@ -40,7 +40,7 @@ rownames converted to a numeric vector. If 'model' is a string, then
 default values are used for the predefined models ("ER", "GRG", "KR", "WS",
 and "BA"). The default 'parameter' argument corresponds to a sequence from
 
-0 to 1 with step 'eps' for the "ER" model (Erdos-Renyi random graph), in
+0 to 1 with step 'eps' for the "ER" model (Erdős–Rényi random graph), in
 which the parameter corresponds to the probability to connect a pair of
 vertices;
 
@@ -94,7 +94,7 @@ divergence between the observed graph and the graph model with the estimated
 parameter.}
 }
 \description{
-'graph.param.estimator' estimates the parameter that best approximates the
+\code{graph.param.estimator} estimates the parameter that best approximates the
 model to the observed graph according to the Graph Information Criterion
 (GIC).
 }

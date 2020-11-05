@@ -25,7 +25,7 @@ eigenvalues of A will be computed by 'graph.entropy'.}
 a real number corresponding to the graph spectral entropy.
 }
 \description{
-'graph.entropy' returns the spectral entropy of an undirected graph.
+\code{graph.entropy} returns the spectral entropy of an undirected graph.
 }
 \examples{
 G <- igraph::sample_gnp(n=100, p=0.5)

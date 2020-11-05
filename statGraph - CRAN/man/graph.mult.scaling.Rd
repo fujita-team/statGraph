@@ -41,7 +41,7 @@ row corresponds to a graph (point). Then, each row gives the coordinates of
 the points chosen to represent the Jensen-Shannon divergence between graphs.
 }
 \description{
-'graph.mult.scaling' performs multidimensional scaling of graphs. It takes
+\code{graph.mult.scaling} performs multidimensional scaling of graphs. It takes
 the Jensen-Shannon divergence between graphs (JS) and uses the 'cmdscale'
 function from the 'stats' package to obtain a set of points such that the
 distances between the points are similar to JS.
