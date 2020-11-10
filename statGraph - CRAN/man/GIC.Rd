@@ -26,9 +26,9 @@ components "x" and "y", which are numeric vectors of the same size. The "x"
 component contains the points at which the density was computed and the "y"
 component contains the observed density.
 
-A string that indicates one of the following models: "ER" (Erdős–Rényi random
+A string that indicates one of the following models: "ER" (Erdos-Renyi random
 graph), "GRG" (geometric random graph), "KR" (k regular random graph), "WS"
-(Watts-Strogatz model), and "BA" (Barabási-Albert model). When the argument
+(Watts-Strogatz model), and "BA" (Barabasi-Albert model). When the argument
 'model' is a string, the user must also provides the model parameter by using
 the argument 'p'.
 
@@ -47,7 +47,7 @@ each column, and then will take the average density.}
 argument 'model' is a string or a function.
 For the predefined models ("ER", "GRG", "KR", "WS", and "BA"), the parameter
 the probability to connect a pair of vertices, for the "ER" model
-(Erdős–Rényi random graph);
+(Erdos-Renyi random graph);
 
 the radius used to construct the geometric graph in a unit square, for the
 "GRG" model (geometric random graph);
@@ -58,7 +58,7 @@ graph);
 the probability to reconnect a vertex, for the "WS" model (Watts-Strogatz
 model);
 
-and the scaling exponent, for the "BA" model (Barabási-Albert model).}
+and the scaling exponent, for the "BA" model (Barabasi-Albert model).}
 
 \item{bandwidth}{string showing which criterion is used to choose the
 bandwidth during the spectral density estimation. Choose between the

@@ -18,8 +18,8 @@ edges.}
 An object of class acf.
 }
 \description{
-The function \code{graph.acf} computes estimates of the autocorrelation function
-for graphs.
+The function \code{graph.acf} computes estimates of the autocorrelation
+function for graphs.
 }
 \examples{
 require(igraph)

@@ -20,8 +20,8 @@ and 1s. For weighted graphs, each matrix contains real values that correspond
 to the weights of the edges.}
 
 \item{model}{A string that indicates one of the following models: "ER"
-(Erdős–Rényi random graph model), "GRG" (geometric random graph model), "WS"
-(Watts-Strogatz random graph model), and "BA" (Barabási-Albert random graph
+(Erdos-Renyi random graph model), "GRG" (geometric random graph model), "WS"
+(Watts-Strogatz random graph model), and "BA" (Barabasi-Albert random graph
 model).}
 
 \item{maxBoot}{integer indicating the number of bootstrap resamples (default

@@ -13,21 +13,28 @@ fast.spectral.density(
 )
 }
 \arguments{
-\item{graph}{The undirected unweighted graph (igraph type) whose spectral density we want to obtain.}
+\item{graph}{The undirected unweighted graph (igraph type) whose spectral
+density we want to obtain.}
 
-\item{from}{Lower end of the interval that contain the eigenvalues or smallest eigenvalue of the adjacency matrix of the graph. The smallest eigenvalue is used if the value is not given.}
+\item{from}{Lower end of the interval that contain the eigenvalues or
+smallest eigenvalue of the adjacency matrix of the graph. The smallest
+eigenvalue is used if the value is not given.}
 
-\item{to}{Upper end of the interval that contain the eigenvalues or largest eigenvalue of the adjacency matrix of the graph. The largest eigenvalue is used if the value is not given.}
+\item{to}{Upper end of the interval that contain the eigenvalues or largest
+eigenvalue of the adjacency matrix of the graph. The largest eigenvalue is
+used if the value is not given.}
 
 \item{npoints}{Number of discretization points of the interval \[from,to\].}
 
 \item{numCores}{Number of cores to use for parallelization.}
 }
 \value{
-Returns the degree-based spectral density of the graph in the interval \[from,to\] discretized using npoints.
+Returns the degree-based spectral density of the graph in the
+interval \[from,to\] discretized using npoints.
 }
 \description{
-\code{fast.spectral.density} returns the degree-based spectral density in the the interval \[from,to\] by using npoints discretization points.
+\code{fast.spectral.density} returns the degree-based spectral density in
+the interval \[from,to\] by using npoints discretization points.
 }
 \examples{
 G <- igraph::sample_smallworld(dim = 1, size = 10, nei = 2, p = 0.2)

@@ -43,9 +43,9 @@ A list containing:
 \item{bootstrap_samples}{The test distrition on the bootstrap resamples.}
 }
 \description{
-Given two independent finite-dimensional random dot product graphs, \code{tang}
-tests if they have generating latent positions that are drawn from the same
-distribution.
+Given two independent finite-dimensional random dot product graphs,
+\code{tang} tests if they have generating latent positions that are drawn
+from the same distribution.
 }
 \examples{
 require(igraph)

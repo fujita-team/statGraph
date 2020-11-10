@@ -13,15 +13,18 @@ fast.eigenvalue.probability(deg_prob, q_prob, all_k, z, n_iter = 5000)
 
 \item{all_k}{List of sorted unique degrees greater than 1 of the graph.}
 
-\item{z}{Complex number whose real part is the eigenvalue whose probability we want to obtain, the imaginary part is a small value (e.g., 1e-3).}
+\item{z}{Complex number whose real part is the eigenvalue whose probability
+we want to obtain, the imaginary part is a small value (e.g., 1e-3).}
 
 \item{n_iter}{The maximum number of iterations to perform.}
 }
 \value{
-A complex number whose imaginary part absolute value corresponds to the probability of the given eigenvalue.
+A complex number whose imaginary part absolute value corresponds to
+the probability of the given eigenvalue.
 }
 \description{
-\code{fast.eigenvalue.probability} returns the probability of an eigenvalue given the degree and excess degree probability.
+\code{fast.eigenvalue.probability} returns the probability of an eigenvalue
+given the degree and excess degree probability.
 }
 \examples{
 G <- igraph::sample_smallworld(dim = 1, size = 10, nei = 2, p = 0.2)
