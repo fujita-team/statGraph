@@ -39,6 +39,7 @@ greater than the (1-alpha)-quantile of the distribution of the test under the
 null hypothesis.
 }
 \examples{
+\dontrun{
 require(igraph)
 set.seed(42)
 
@@ -57,6 +58,7 @@ for(i in 1:10){
   b[[i]] <- erdos.renyi.game(50,0.6)
 }
 k <- cerqueira(a, b, printResult = TRUE)
+}
 
 }
 \references{

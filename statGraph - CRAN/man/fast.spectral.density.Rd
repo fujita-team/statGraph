@@ -24,22 +24,21 @@ eigenvalue is used if the value is not given.}
 eigenvalue of the adjacency matrix of the graph. The largest eigenvalue is
 used if the value is not given.}
 
-\item{npoints}{Number of discretization points of the interval \[from,to\].}
+\item{npoints}{Number of discretization points of the interval <\code{from},\code{to}>.}
 
 \item{numCores}{Number of cores to use for parallelization.}
 }
 \value{
 Returns the degree-based spectral density of the graph in the
-interval \[from,to\] discretized using npoints.
 }
 \description{
 \code{fast.spectral.density} returns the degree-based spectral density in
-the interval \[from,to\] by using npoints discretization points.
+the interval <\code{from},\code{to}> by using npoints discretization points.
 }
 \examples{
-G <- igraph::sample_smallworld(dim = 1, size = 10, nei = 2, p = 0.2)
+G <- igraph::sample_smallworld(dim = 1, size = 100, nei = 2, p = 0.2)
 # Obtain the degree-based spectral density
-density <- fast.spectral.density(graph = G, npoints = 10, numCores = 1)
+density <- fast.spectral.density(graph = G, npoints = 80, numCores = 1)
 density
 
 }

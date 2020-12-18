@@ -4,9 +4,10 @@
 #' \tabular{ll}{
 #' Package: \tab statGraph\cr
 #' Type: \tab Package\cr
-#' Version: \tab 0.3.0\cr
-#' Date: \tab 2019-10-23\cr
-#' Depends: \tab R (>= 2.10.0), stats, graphics\cr
+#' Version: \tab 0.4.1\cr
+#' Date: \tab 2020-12-16\cr
+#' Depends: \tab R (>= 3.6.0), stats, graphics\cr
+#' Imports: \tab igraph, MASS, rARPACK, cluster, foreach, parallel, doParallel\cr
 #' Encoding: \tab UTF-8\cr
 #' License: \tab GPL (>= 3)\cr
 #' LazyLoad: \tab yes\cr

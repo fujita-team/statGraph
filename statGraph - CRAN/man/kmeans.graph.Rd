@@ -7,32 +7,32 @@
 kmeans.graph(x, k, nstart = 2)
 }
 \arguments{
+\item{x}{a list containing the adjacency matrix of the graphs to be
+clustered.}
+
 \item{k}{an integer specifying the number of clusters.}
 
 \item{nstart}{the number of trials of k-means clusterizations. The algorithm
 returns the clusterization with the best silhouette.}
-
-\item{g}{a list containing the adjacency matrix of the graphs to be
-clustered.}
 }
 \value{
-a vector of the same length of g containing the clusterization
+a vector of the same lenght of g containing the clusterization
 labels.
 }
 \description{
-\code{kmeans.graph} clusters graphs following a k-means algorithm based on
-the Jensen-Shannon divergence between the spectral densities of the graphs.
+\code{kmeans.graph} clusters graphs following a k-means algorithm based on the
+Jensen-Shannon divergence between the spectral densities of the graphs.
 }
 \examples{
+require(igraph)
 g <- list()
 for(i in 1:5){
-  g[[i]] <- igraph::get.adjacency(igraph::sample_gnp(30, p=0.2))
+  g[[i]] <- get.adjacency(sample_gnp(30, p=0.2))
 }
 for(i in 6:10){
-  g[[i]] <- igraph::get.adjacency(igraph::sample_gnp(30, p=0.5))
+  g[[i]] <- get.adjacency(sample_gnp(30, p=0.5))
 }
 res <- kmeans.graph(g, k=2, nstart=2)
-res
 
 }
 \references{

@@ -133,7 +133,7 @@ graph.entropy <- function(A=NULL, bandwidth="Silverman", eigenvalues=NULL) {
 #' *21*, 65-66.
 #'
 #' @examples
-#' A <- as.matrix(igraph::get.adjacency(igraph::sample_gnp(n=100, p=0.5)))
+#' A <- as.matrix(igraph::get.adjacency(igraph::sample_gnp(n=50, p=0.5)))
 #' # Using a string to indicate the graph model
 #' result1 <- GIC(A, "ER", 0.5)
 #' result1
@@ -148,6 +148,7 @@ graph.entropy <- function(A=NULL, bandwidth="Silverman", eigenvalues=NULL) {
 #' @export
 GIC <- function(A, model, p=NULL, bandwidth="Silverman", eigenvalues=NULL,
                 dist = "KL") {
+
   if (is.null(eigenvalues)){
     eigenvalues <- as.numeric(eigen(A, only.values = TRUE,symmetric=TRUE)$values)
     eigenvalues <- eigenvalues/sqrt(nrow(A))
@@ -168,10 +169,13 @@ GIC <- function(A, model, p=NULL, bandwidth="Silverman", eigenvalues=NULL,
   }else {
     fun <- model
     if (class(model) == "character") {
-      if (model == "WS")
+      if (model == "WS"){
         fun <- WSfun(as.integer(sum(A)/(2*ncol(A))))
-      else
-        fun <- matchFunction(model)
+      }else if(model == "BA"){
+        fun <- BAfun(ceiling(mean(rowSums(A))/2))
+      }else{
+	    fun <- matchFunction(model)
+	  }
     }
     f2 <- modelSpectralDensity(fun, ncol(A), p, from=min(eigenvalues),
                                to=max(eigenvalues), bandwidth=bandwidth,
@@ -185,7 +189,6 @@ GIC <- function(A, model, p=NULL, bandwidth="Silverman", eigenvalues=NULL,
     return(Inf)
   if (sum(is.na(f2)) > 0)
     return(Inf)
-
   if(dist == "KL") out <- KL(f1,f2)
   else if(dist == "L2") out <- distance(f1,f2)
   return (out)
@@ -344,6 +347,18 @@ graph.param.estimator <- function(A, model, parameters=NULL, eps=0.01,
       }
     }
     out <- list("p"=pmin, "GIC"=klmin)
+  }
+  #if model is ER, we compute the exact parameter
+  else if(model == "ER"){
+    p = sum(A)/(n*(n-1))
+    kl <- GIC(A, model, p, bandwidth, eigenvalues=eigenvalues)
+    out <- list("p" = p, "GIC" = kl)
+  }
+  #if model is KR, we compute the exact parameter
+  else if(model == "KR"){
+    p = sum(A)/(n)
+    kl <- GIC(A, model, p, bandwidth, eigenvalues=eigenvalues)
+    out <- list("p" = p, "GIC" = kl)
   }
   else
   {
@@ -1236,7 +1251,7 @@ tang <- function(G1, G2, dim, sigma = NULL, alpha = 0.05, bootstrap_sample=200,
   }
   if (printResult) {
     if (reject) {
-      msg <- paste("Reject the nullhypothesis that two graphs are identically",
+      msg <- paste("Reject the null hypothesis that two graphs are identically",
                    "distributed.")
       print(msg)
     } else {
@@ -1288,6 +1303,7 @@ tang <- function(G1, G2, dim, sigma = NULL, alpha = 0.05, bootstrap_sample=200,
 #' inhomogeneous random graphs". arXiv preprint, arXiv:1707.00833 (2017).
 #'
 #' @examples
+#' \dontrun{
 #' require(igraph)
 #' set.seed(42)
 #'
@@ -1318,7 +1334,7 @@ tang <- function(G1, G2, dim, sigma = NULL, alpha = 0.05, bootstrap_sample=200,
 #' x[[1]] <- erdos.renyi.game(300, 0.6)
 #' y[[1]] <- erdos.renyi.game(300, 0.7)
 #' D <- ghoshdastidar(x, y, two.sample= TRUE, printResult = TRUE)
-#'
+#' }
 #'
 #' @export
 ghoshdastidar <- function(x, y, maxPer = 300, alpha = 0.05, two.sample = FALSE,
@@ -1398,6 +1414,7 @@ ghoshdastidar <- function(x, y, maxPer = 300, alpha = 0.05, two.sample = FALSE,
 #' https://ieeexplore.ieee.org/document/7862892
 #'
 #' @examples
+#' \dontrun{
 #' require(igraph)
 #' set.seed(42)
 #'
@@ -1416,6 +1433,7 @@ ghoshdastidar <- function(x, y, maxPer = 300, alpha = 0.05, two.sample = FALSE,
 #'   b[[i]] <- erdos.renyi.game(50,0.6)
 #' }
 #' k <- cerqueira(a, b, printResult = TRUE)
+#' }
 #'
 #' @export
 cerqueira <- function(g, gp, maxPer = 300, alpha = 0.05, printResult = FALSE)
@@ -1492,6 +1510,7 @@ cerqueira <- function(g, gp, maxPer = 300, alpha = 0.05, printResult = FALSE)
 #' https://www.nature.com/articles/s41598-018-23152-5
 #'
 #' @examples
+#' \dontrun{
 #' require(igraph)
 #' set.seed(42)
 #'
@@ -1512,6 +1531,7 @@ cerqueira <- function(g, gp, maxPer = 300, alpha = 0.05, printResult = FALSE)
 #' }
 #' d <- list(a,b)
 #' k <- fraiman(d, printResult = TRUE)
+#' }
 #'
 #' @export
 fraiman <- function(g, maxPer = 300, alpha = 0.05, printResult = FALSE){
@@ -1550,596 +1570,6 @@ fraiman <- function(g, maxPer = 300, alpha = 0.05, printResult = FALSE){
 }
 
 
-
-#' Degree-based eigenvalue probability
-#'
-#' \code{fast.eigenvalue.probability} returns the probability of an eigenvalue
-#' given the degree and excess degree probability.
-#'
-#' @param deg_prob The degree probability of the graph.
-#'
-#' @param q_prob The excess degree probability of the graph.
-#'
-#' @param all_k  List of sorted unique degrees greater than 1 of the graph.
-#'
-#' @param z  Complex number whose real part is the eigenvalue whose probability
-#' we want to obtain, the imaginary part is a small value (e.g., 1e-3).
-#'
-#' @param n_iter The maximum number of iterations to perform.
-#'
-#' @return A complex number whose imaginary part absolute value corresponds to
-#' the probability of the given eigenvalue.
-#'
-#' @keywords eigenvalue_probability
-#'
-#' @references
-#' Newman, M. E. J., Zhang, X., & Nadakuditi, R. R. (2019).
-#' Spectra of random networks with arbitrary degrees.
-#' Physical Review E, 99(4), 042309.
-#'
-#' @examples
-#' G <- igraph::sample_smallworld(dim = 1, size = 10, nei = 2, p = 0.2)
-#' # Obtain the degree distribution
-#' deg_prob <- c(igraph::degree_distribution(graph = G, mode = "all"),0.0)
-#' k_deg <- seq(1,length(deg_prob)) - 1
-#' # Obtain the excess degree distribution
-#' c <- sum(k_deg * deg_prob)
-#' q_prob <- c()
-#' for(k in 0:(length(deg_prob) - 1)){
-#'   aux_q <- (k + 1) * deg_prob[k + 1]/c
-#'   q_prob <- c(q_prob,aux_q)
-#' }
-#' # Obtain the sorted unique degrees greater than 1
-#' all_k <- c(1:length(q_prob))
-#' valid_idx <- q_prob != 0
-#' q_prob <- q_prob[valid_idx]
-#' all_k <- all_k[valid_idx]
-#' # Obtain the probability of the eigenvalue 0
-#' z <- 0 + 0.01*1i
-#' eigenval_prob <- -Im(fast.eigenvalue.probability(deg_prob,q_prob,all_k,z))
-#' eigenval_prob
-#'
-#' @export
-fast.eigenvalue.probability <- function(deg_prob,q_prob,all_k,z,n_iter = 5000){
-  h_z   <- 0 + 0i
-  eps <- 1e-7
-  all_k_mo <- all_k - 1
-  while(n_iter > 0){
-    new_h_z <- sum(q_prob/(1 - all_k_mo*h_z))
-    new_h_z <- new_h_z/z^2
-    # replaces H_z using the new value found
-    if(abs(h_z - new_h_z) < eps){
-      h_z <- new_h_z
-      break
-    }
-    h_z <- new_h_z
-    n_iter <- n_iter - 1
-  }
-
-  # returns the final result
-  count_z <- 0
-  for(k in 1:length(deg_prob)){
-    count_z <- count_z + (deg_prob[k])/(1 - (k - 1)*h_z)
-  }
-
-  count_z <- (count_z/z)
-
-  return (count_z)
-}
-
-#' Degree-based spectral density
-#'
-#' \code{fast.spectral.density} returns the degree-based spectral density in
-#' the interval \[from,to\] by using npoints discretization points.
-#'
-#' @param graph The undirected unweighted graph (igraph type) whose spectral
-#' density we want to obtain.
-#'
-#' @param from Lower end of the interval that contain the eigenvalues or
-#' smallest eigenvalue of the adjacency matrix of the graph. The smallest
-#' eigenvalue is used if the value is not given.
-#'
-#' @param to  Upper end of the interval that contain the eigenvalues or largest
-#' eigenvalue of the adjacency matrix of the graph. The largest eigenvalue is
-#' used if the value is not given.
-#'
-#' @param npoints Number of discretization points of the interval \[from,to\].
-#'
-#' @param numCores Number of cores to use for parallelization.
-#'
-#'
-#' @return Returns the degree-based spectral density of the graph in the
-#' interval \[from,to\] discretized using npoints.
-#'
-#' @keywords eigenvalue_density
-#'
-#' @references
-#' Newman, M. E. J., Zhang, X., & Nadakuditi, R. R. (2019).
-#' Spectra of random networks with arbitrary degrees.
-#' Physical Review E, 99(4), 042309.
-#'
-#' @examples
-#' G <- igraph::sample_smallworld(dim = 1, size = 10, nei = 2, p = 0.2)
-#' # Obtain the degree-based spectral density
-#' density <- fast.spectral.density(graph = G, npoints = 10, numCores = 1)
-#' density
-#'
-#' @export
-fast.spectral.density <- function(graph, from = NULL, to = NULL, npoints = 2000,
-                                  numCores = 1){
-  `%dopar%` <- foreach::`%dopar%`
-  # Number of vertices
-  n <- igraph::vcount(graph)
-  # Adjacency matrix
-  A <- NULL
-  # If 'from' or 'to' are null, then get the adjacency matrix
-  if(is.null(from) || is.null(to)){
-    A <- igraph::as_adjacency_matrix(graph,type = "both")
-  }
-  # Obtain the largest eigenvalue
-  if(is.null(to)){
-    to   <- rARPACK::eigs_sym(A,k = 1)$values[1]
-  }
-  # Obtain the smallest eigenvalue
-  if(is.null(from)){
-    from <- rARPACK::eigs_sym(A,k = 1,which = "SA")$values[1]
-  }
-  # Discretizise interval [from,to] in npoints
-  bw <- (to - from)/npoints
-  x <- seq(from,to,bw)
-  y <- rep(0,length(x))
-  # Obtain the degree and excess degree distribution
-  deg_prob <- c(igraph::degree_distribution(graph = graph, mode = "all"),0.0)#/vcount(graph)
-  k_deg <- seq(1,length(deg_prob)) - 1
-  c <- sum(k_deg * deg_prob)
-  q_prob <- c()
-
-  for(k in 0:(length(deg_prob) - 1)){
-    aux_q <- (k + 1) * deg_prob[k + 1]/c
-    q_prob <- c(q_prob,aux_q)
-  }
-  # Obtain sorted unique degrees of the graph
-  all_k <- c(1:length(q_prob)) #- 1
-  valid_idx <- q_prob != 0
-  q_prob <- q_prob[valid_idx]
-  all_k <- all_k[valid_idx]
-
-  # Obtain the eigenvalue density for each discretized points by using numCores
-  # cores.
-  doMC::registerDoMC(numCores)
-  y <- foreach::foreach(i=1:length(x),.combine = c) %dopar% {
-    z <- x[i] + 0.01*1i
-    -Im(fast.eigenvalue.probability(deg_prob,q_prob,all_k,z))
-  }
-
-  # Returns density function
-  return (list("x" = x,"y" = y))
-}
-
-#' Degree-based graph parameter estimator
-#'
-#' \code{fast.graph.param.estimator} estimates the parameter of the complex
-#' network model using the degree-based spectral density and ternary search.
-#'
-#' @param graph The undirected unweighted graph (igraph type).
-#'
-#' @param model Either a string or a function:
-#'
-#' A string that indicates one of the following models: "ER" (Erdos-Renyi random
-#' graph model), "GRG" (geometric random graph model), "WS" (Watts-Strogatz
-#' model), and "BA" (Barabasi-Albert model).
-#'
-#' A function that returns a Graph generated by a graph model. It must contain
-#' two arguments: the first one corresponds to the graph size and the second to
-#' the parameter of the model.
-#'
-#' @param lo Smallest parameter value that the graph model can take.
-#'
-#' If ``model'' is an string, then the default value of 0 is used for the
-#' predefined models ("ER", "GRG", "WS", and "BA").
-#'
-#' @param hi Largest parameter value that the graph model can take.
-#'
-#' If ``model'' is an string, then the default values are used for the
-#' predefined models 1 for "ER", sqrt(2) for "GRG", 1 for "WS", and 5 for "BA").
-#'
-#' @param eps Desired precision of the parameter estimate.
-#'
-#' @param from Lower end of the interval that contain the eigenvalues to
-#' generate the degree-based spectral densities. The smallest eigenvalue of the
-#' adjacency matrix corresponding to ``graph'' is used if the value is not given.
-#'
-#' @param to  Upper end of the interval that contain the eigenvalues to generate
-#' the degree-based spectral densities. The largest eigenvalue of the adjacency
-#' matrix corresponding to ``graph'' is used if the value is not given.
-#'
-#' @param npoints Number of points to discretize the interval \[from,to\].
-#'
-#' @param numCores Number of cores to use for parallelization.
-#'
-#'
-#' @return Returns a list containing:
-#' \item{param}{The degree-based parameter estimate. For the "ER", "GRG", "WS",
-#' and "BA" models, the parameter corresponds to the probability to connect a
-#' pair of vertices, the radius used to construct the geometric graph in a unit
-#' square, the probability to reconnect a vertex, and the scaling exponent
-#' respectively.}
-#' \item{dist}{The L1 distance between the observed graph and the graph model
-#' with the estimated value.}
-#'
-#' @keywords degree_based_parameter_estimation
-#'
-#' @examples
-#' ### Example giving only the name of the model to use
-#' G <- igraph::sample_smallworld(dim = 1, size = 10, nei = 2, p = 0.2)
-#' # Obtain the parameter of the WS model
-#' estimated.parameter <- fast.graph.param.estimator(G, "WS", npoints = 10,
-#'                                                   numCores = 1)
-#' estimated.parameter
-#' ### Example giving a function instead of a model
-#' # Defining the model to use
-#' K <- as.integer(igraph::ecount(G)/igraph::vcount(G))
-#' fun_WS <- function(n, param, nei = K){
-#'   return (igraph::sample_smallworld(dim = 1,size = n, nei = nei,p = param))
-#' }
-#' # Obtain the parameter of the WS model
-#' estimated.parameter <- fast.graph.param.estimator(G, fun_WS, lo = 0, hi = 1,
-#'                                                   npoints = 10, numCores = 1)
-#' estimated.parameter
-#'
-#' @export
-fast.graph.param.estimator <- function(graph, model, lo = NULL, hi = NULL,
-                                       eps = 1e-3, from = NULL, to = NULL,
-                                       npoints = 2000, numCores = 1){
-
-  # When the model is a function then check if the smallest and largest values
-  # that the parameter can take was also provided
-  if(class(model) == "function" && (is.null(lo) || is.null(hi))){
-    stop("You must specify the largest and smallest parameter value that the graph model can take")
-  }
-  # If 'model' is a character then define the parameter interval search.
-  # Also recover the functions that generate each model
-  fun <- model
-  if(class(model) == "character"){
-    if(model == "ER"){
-      lo <- 0
-      hi <- 1
-      fun <- matchFunction(model)
-    } else if(model == "GRG"){
-      lo <- 0
-      hi <- sqrt(2)
-      fun <- matchFunction(model)
-    } else if(model == "WS"){
-      lo <- 0
-      hi <- 1
-      fun <- WSfun(as.integer(igraph::ecount(graph)/(igraph::vcount(graph))))
-    } else if(model == "BA"){
-      lo <- 0
-      hi <- 5
-      fun <- BAfun(as.integer(igraph::ecount(graph)/(igraph::vcount(graph))))
-    } else {
-      stop("The 'model' that you specified is not allowed, the allowed model are: \"ER\",\"GRG\",\"WS\" or \"BA\"")
-    }
-  }
-
-  # Adjacency matrix
-  A <- NULL
-  # If 'from' or 'up' are null then get the adjacency matrix
-  if(is.null(from) || is.null(to)){
-    A <- igraph::as_adjacency_matrix(graph,type = "both")
-  }
-  # Obtain largest eigenvalue
-  if(is.null(to)){
-    to <- rARPACK::eigs_sym(A,k = 1)$values[1]
-  }
-  # Obtain smallest eigenvalue
-  if(is.null(from)){
-    from <- rARPACK::eigs_sym(A,k = 1,which = "SA")$values[1]
-  }
-  # Obtain the number of vertices of the graph
-  n <- igraph::vcount(graph)
-  # Obtain density function of the observed graph
-  observed_graph_density <- fast.spectral.density(graph, from = from, to = to,
-                                                  npoints = npoints,
-                                                  numCores = numCores)
-  # Make ternary search
-  dist_to_1 <- NULL
-  dist_to_2 <- NULL
-  while(abs(lo - hi) > eps && lo < hi){
-    mid1 <- (2*lo + hi)/3
-    mid2 <- (2*hi + lo)/3
-    # Generate graph using parameter mid1
-    if(class(model) == 'function'){
-      Graph1 <- fun(n,mid1)
-    } else {
-      Graph1 <- fun(n,mid1, as_matrix = FALSE)
-    }
-    density1 <- fast.spectral.density(Graph1, from = from, to = to,
-                                      npoints = npoints,
-                                      numCores = numCores)
-    # Free memory allocated by Graph1
-    rm(Graph1)
-    # Generate graph using parameter mid2
-    if(class(model) == 'function'){
-      Graph2 <- fun(n,mid2)
-    } else {
-      Graph2 <- fun(n,mid2, as_matrix = FALSE)
-    }
-    density2 <- fast.spectral.density(Graph2, from = from, to = to,
-                                      npoints = npoints,
-                                      numCores = numCores)
-    # Free memory allocated by Graph2
-    rm(Graph2)
-    # Reduce the interval search
-    dist_to_1 <- trapezoidSum(observed_graph_density$x,abs(observed_graph_density$y - density1$y))
-    dist_to_2 <- trapezoidSum(observed_graph_density$x,abs(observed_graph_density$y - density2$y))
-    if(dist_to_1 < dist_to_2){
-      hi <- mid2
-    } else {
-      lo <- mid1
-    }
-  }
-  # The search was finished, now save the parameter and the distance
-  param = (lo + hi)/2
-  dist  = (dist_to_1 + dist_to_2)/2
-
-  return (list("param" = param,"dist" = dist))
-}
-
-#=========================================
-## Clustering functions
-
-#' Clustering Expectation-Maximization for Graphs (gCEM)
-#'
-#' \code{gCEM} clusters graphs following an expectation-maximization algorithm
-#' based on the Kullback-Leibler divergence between the spectral densities of
-#' the graph and of the random graph model.
-#'
-#' @param g a list containing the adjacency matrix of the graphs to be
-#' clustered.
-#'
-#' @param  model a string that indicates one of the following random graph
-#' models: "ER" (Erdos-Renyi random graph), "GRG" (geometric random graph), "KR"
-#' (k regular graph), "WS" (Watts-Strogatz model), and "BA" (Barabasi-Albert
-#' model).
-#'
-#' @param num_clusters an integer specifying the number of clusters.
-#'
-#' @param ncores the number of cores used in the parallel processing. The
-#' default value is 1.
-#'
-#' @return a vector containing two fields:
-#' labels a vector of the same length of g containing the clusterization labels;
-#' p a vector of length equals to num_clusters.
-#'
-#' @keywords gCEM
-#'
-#' @references
-#' Celeux, Gilles, and Govaert, Gerard. "Gaussian parsimonious clustering
-#' models." Pattern recognition 28.5 (1995): 781-793.
-#'
-#' @examples
-#' g <- list()
-#' for(i in 1:3){
-#'   g[[i]] <- igraph::get.adjacency(igraph::sample_smallworld(dim=1, size=30, nei=2 ,p=0))
-#' }
-#' for(i in 4:6){
-#'   g[[i]] <- igraph::get.adjacency(igraph::sample_smallworld(dim=1, size=30, nei=2 ,p=1))
-#' }
-#' res <- gCEM(g, model="WS", num_clusters=2, ncores=2)
-#' res
-#'
-#' @export
-gCEM <- function(g, model, num_clusters, ncores=1){
-  `%dopar%` <- foreach::`%dopar%`
-  `%:%` <- foreach::`%:%`
-
-  doMC::registerDoMC(ncores)
-  tipo <- model
-  tau  <- matrix(0, nrow = num_clusters, ncol = length(g))
-  kl   <- matrix(0, nrow = num_clusters, ncol = length(g))
-
-  prevlik <- 0
-  lik     <- 1
-  count   <- 0
-  prevlabels <- array(0, length(g))
-  vertices <- nrow(g[[1]])
-  labels <- array(0, length(g))
-  g_GIC <- array(0, length(g))
-  p <- array(0, num_clusters)
-
-  # Range that the parameters will be estimated
-  if (tipo == "ER") {
-    parameters <- seq(0.1, 1, 0.01)
-  }
-  else if (tipo == "GRG") {
-    parameters <- seq(0.1, sqrt(2), 0.01)
-  }
-  else if (tipo == "WS") {
-    parameters <- seq(0.01, 1, 0.01)
-  }
-  else if (tipo == "KR") {
-    parameters <- as.integer(seq(2, 10, 1))
-  }
-  else if (tipo == "BA") {
-    parameters <- seq(0.01, 4, 0.01)
-  }
-  # Pre-processing of the graph spectra
-  eigenvalues <- list()
-  eigenvalues <- foreach::foreach(j = 1:length(g))%dopar%{
-    as.numeric(eigen(g[[j]], only.values = TRUE, symmetric=TRUE)$values)
-  }
-  p_graph <- array(0, length(g))
-  # Parameter estimation
-  ret <- foreach::foreach(i=1:length(g))%dopar%{
-    graph.param.estimator(g[[i]], model=tipo, parameters=parameters, bandwidth="Sturges", eigenvalues=eigenvalues[[i]], eps=0.5)
-  }
-  for(i in 1:length(g)){
-    p_graph[i] <- ret[[i]]$p
-    g_GIC[i]   <- ret[[i]]$GIC
-  }
-
-  # Initialize cluster parameters
-  p_uniq <- unique(p_graph)
-  for(i in 1:num_clusters){
-    p[i] <- quantile(p_uniq, i/(num_clusters+1))
-    # The KR parameter needs to be even
-    if(tipo == "KR") p[i] <- round(p[i])
-  }
-
-  convergiu <- 0
-  count <- 0
-  while(!convergiu){
-    kl <- foreach::foreach(i = 1:num_clusters, .combine=cbind) %:% foreach::foreach(j = 1:length(g), .combine=c) %dopar% {
-      GIC(g[[j]], tipo, p[i], bandwidth = "Sturges", eigenvalues = eigenvalues[[j]], dist="KL" )
-    }
-    kl <- t(kl)
-    kl[which(kl == Inf)] <- max(kl[which(kl < Inf)])
-
-    for(i in 1:length(g)){
-      tau[,i] <- (1/kl[,i])/sum(1/kl[,i])
-    }
-
-    for(i in 1:length(g)){
-      labels[i] <- which(tau[,i] == max(tau[,i]))
-    }
-    # Check if there is an empty group
-    for(i in 1:num_clusters){
-      if(length(which(labels == i))==0) labels[which(tau[i,] == max(tau[i,]))] <- i
-    }
-
-    # Estimates the value of p for the models in order to maximize the tae
-    for(i in 1:num_clusters){
-      p[i] <- sum(p_graph[which(labels==i)])/length(which(labels==i))
-      if(tipo == "KR") p[i] <- round(p[i])
-    }
-
-    prevlik <- lik
-    lik <- sum(tau*kl)
-    count <- count + 1
-    if(count > 10){
-      convergiu = 1
-    }
-
-    if((prevlik!=0 && prevlik/lik > 0.99 && prevlik/lik < 1.01) ) convergiu <- 1
-    prevlabels <- labels
-  }
-  ret <- list(labels, p)
-
-  return(ret)
-}
-
-#====================================
-#Kmeans
-
-#' K-means for Graphs
-#'
-#' \code{kmeans.graph} clusters graphs following a k-means algorithm based on
-#' the Jensen-Shannon divergence between the spectral densities of the graphs.
-#'
-#' @param g a list containing the adjacency matrix of the graphs to be
-#' clustered.
-#'
-#' @param k an integer specifying the number of clusters.
-#'
-#' @param nstart the number of trials of k-means clusterizations. The algorithm
-#' returns the clusterization with the best silhouette.
-#'
-#' @return a vector of the same length of g containing the clusterization
-#' labels.
-#'
-#' @keywords k-means
-#'
-#' @references
-#' MacQueen, James. "Some methods for classification and analysis of
-#' multivariate observations." Proceedings of the fifth Berkeley symposium on
-#' mathematical statistics and probability. Vol. 1. No. 14. 1967.
-#'
-#' Lloyd, Stuart. "Least squares quantization in PCM." IEEE transactions on
-#' information theory 28.2 (1982): 129-137.
-#'
-#' @examples
-#' g <- list()
-#' for(i in 1:5){
-#'   g[[i]] <- igraph::get.adjacency(igraph::sample_gnp(30, p=0.2))
-#' }
-#' for(i in 6:10){
-#'   g[[i]] <- igraph::get.adjacency(igraph::sample_gnp(30, p=0.5))
-#' }
-#' res <- kmeans.graph(g, k=2, nstart=2)
-#' res
-#'
-#' @export
-kmeans.graph <- function(x, k, nstart=2) {
-  sil <- -1
-  num.graphs <- length(x)
-  tmp <- spectral_density(x)
-  spectral.density <- tmp$spectral.density
-
-  if (k > nstart) nstart <- k
-
-  for (ns in 1:nstart) {
-    ## Random initialization of the clusters
-    label <- sample(seq(1:k), num.graphs, replace=TRUE)
-    converged <- FALSE
-    while(converged == FALSE) {
-      centroid <- matrix(0, k, 512)
-      for (j in 1:k) {
-        for (i in 1:512) {
-          centroid[j,i] <- mean(spectral.density[which(label==j),i])
-        }
-        centroid[j,] <- centroid[j,] / trapezoidSum(tmp$x, centroid[j,])
-      }
-
-      distance <- matrix(0, num.graphs, k)
-      for (j in 1:k) {
-        tmp1 <- list()
-        tmp1$y <- centroid[j,]
-        tmp1$x <- tmp$x
-        for(i in 1:num.graphs) {
-          tmp2 <- list()
-          tmp2$y <- spectral.density[i,]
-          tmp2$x <- tmp$x
-          distance[i,j] <- sqrt(JS(tmp1, tmp2))
-        }
-      }
-
-      label.new <- array(0, num.graphs)
-      for(i in 1:num.graphs) {
-        label.new[i] <- which(distance[i,] == min(distance[i,]))[1]
-      }
-      i <- 1
-      while(i<=k) {
-        if(length(which(label.new == i)) != 0) {
-          i <- i + 1
-        }
-        else { ## There is an empty cluster
-          size.cluster <- array(0,k)
-          for(j in 1:k) {
-            size.cluster[j] <- length(which(label.new == j))
-          }
-          largest.cluster <- which(size.cluster == max(size.cluster))
-          item <- which(distance[, largest.cluster] ==
-                          max(distance[which(label.new == largest.cluster), largest.cluster]))
-          label.new[item] <- i
-          i <- 1
-        }
-      }
-
-      if(length(which(label == label.new)) == num.graphs) {
-        converged <- TRUE
-        sil.new <- mean(cluster::silhouette(label, distance_matrix(tmp))[,3])
-
-        if(sil.new > sil) {
-          sil <- sil.new
-          label.final <- label
-        }
-      }
-      label <- label.new
-    }
-  }
-  return(label.final)
-}
 
 ################################################################################
 ## Auxiliary functions
@@ -2302,7 +1732,7 @@ nSpectralDensities <- function (adjacencyMatrices, from=NULL, to=NULL,
 }
 
 # Estimates the spectral density of a graph model
-modelSpectralDensity <- function(fun, n, p, ngraphs=50, from=NULL, to=NULL,
+modelSpectralDensity <- function(fun, n, p, ngraphs=100, from=NULL, to=NULL,
                                  bandwidth="Silverman", npoints=1024) {
   spectra <- matrix(NA, n, ngraphs)
   for (i in 1:ngraphs) {
@@ -2780,10 +2210,281 @@ g.transform <- function(g)
 }
 
 
+## FROM THIS POINT TAIANE CODE
+#=============================
 
-#=========================
+#=========================================
+## Clustering functions
+
+#' Clustering Expectation-Maximization for Graphs (gCEM)
+#'
+#' \code{gCEM} clusters graphs following an expectation-maximization algorithm based
+#' on the Kullback-Leibler divergence between the spectral densities of the
+#' graph and of the random graph model.
+#'
+#' @param g a list containing the adjacency matrix of the graphs to be
+#' clustered.
+#'
+#' @param  model a string that indicates one of the following random graph
+#' models: "ER" (Erdos-Renyi random graph), "GRG" (geometric random graph), "KR"
+#' (k regular graph), "WS" (Watts-Strogatz model), and "BA" (Barabasi-Albert
+#' model).
+#'
+#' @param num_clusters an integer specifying the number of clusters.
+#'
+#' @param max_iter the maximum number of expectation-maximization steps to execute.
+#'
+#' @param ncores the number of cores to be used for the parallel processing. The
+#' default value is 1.
+#'
+#' @return a list containing three fields:
+#' labels a vector of the same lenght of g containing the clusterization labels;
+#' p a vector of length equals to num_clusters;
+#'
+#' @keywords gCEM
+#'
+#' @references
+#' Celeux, Gilles, and Gerard Govaert. "Gaussian parsimonious clustering
+#' models." Pattern recognition 28.5 (1995): 781-793.
+#'
+#' @examples
+#' require(igraph)
+#'  g <- list()
+#'  for(i in 1:2){
+#'    g[[i]] <- igraph::get.adjacency(igraph::sample_gnp(n=10, p=0.5))
+#'  }
+#'  for(i in 3:4){
+#'    g[[i]] <- igraph::get.adjacency(igraph::sample_gnp(n=10, p=1))
+#'  }
+#'  res <- gCEM(g, model="ER", num_clusters=2, max_iter=1, ncores=1)
+#' @export
+gCEM <- function(g, model, num_clusters, max_iter = 10, ncores=1){
+
+  `%dopar%` <- foreach::`%dopar%`
+  `%:%` <- foreach::`%:%`
+
+  #doMC::registerDoMC(ncores)
+  # parallel
+  cl <- parallel::makePSOCKcluster(ncores)
+  doParallel::registerDoParallel(cl)
+
+  tipo <- model
+  tau <- matrix(0, nrow = num_clusters, ncol = length(g))
+  kl <- matrix(0, nrow = num_clusters, ncol = length(g))
+
+  prevlik <- 0
+  lik <- 1
+  count <- 0
+  prevlabels <- array(0, length(g))
+  vertices <- nrow(g[[1]])
+  labels <- array(0, length(g))
+  g_GIC <- array(0, length(g))
+  p <- array(0, num_clusters)
+
+  ## Range that the parameters will be estimated
+  if (tipo == "ER") {
+    parameters <- seq(0.1, 1, 0.01)
+  }
+  if (tipo == "GRG") {
+    parameters <- seq(0.1, sqrt(2), 0.01)
+  }
+  if (tipo == "WS") {
+    parameters <- seq(0.01, 1, 0.01)
+  }
+  if (tipo == "KR") {
+    parameters <- as.integer(seq(2, 10, 1))
+  }
+  if (tipo == "BA") {
+    parameters <- seq(0.01, 4, 0.01)
+  }
+
+  ## Pre-processing of the graph spectra
+  eigenvalues <- list()
+  j = 1 # adicionado por Grover
+  eigenvalues <- foreach::foreach(j = 1:length(g)) %dopar% {
+    as.numeric(eigen(g[[j]], only.values = TRUE,
+                     symmetric=TRUE)$values)/sqrt(vertices)
+  }
+
+  p_graph <- array(0, length(g))
+  # Adicionado pelo Grover
+  list_functions = c("GIC","matchFunction","ER","KR","WS","BA","GRG","WSfun","BAfun","modelSpectralDensity","nDensities","gaussianDensity","kernelBandwidth","trapezoidSum","KL","distance")
+  ## Parameter estimation
+  ret <- foreach::foreach(i = 1:length(g),.export = c("graph.param.estimator",list_functions)) %dopar% {
+    graph.param.estimator(g[[i]], model=tipo, parameters=parameters, bandwidth="Sturges", eigenvalues=eigenvalues[[i]], eps=0.01)
+  }
+  #
+  for(i in 1:length(g)){
+    p_graph[i] <- ret[[i]]$p
+    g_GIC[i] <- ret[[i]]$GIC
+  }
+
+  #Initialize cluster parameters
+  p_uniq <- unique(p_graph)
+  for(i in 1:num_clusters){
+    p[i] <- quantile(p_uniq, i/(num_clusters+1))
+    #the KR parameter needs to be even
+    if(tipo == "KR") p[i] <- round(p[i])
+  }
+
+  convergiu <- 0
+  count <- 0
+  while(!convergiu){
+    kl <- foreach::foreach(i = 1:num_clusters, .combine=cbind,.export = list_functions) %:% foreach::foreach(j = 1:length(g), .combine=c,.export = list_functions) %dopar% {
+      GIC(g[[j]], tipo, p[i], bandwidth = "Sturges", eigenvalues = eigenvalues[[j]], dist="KL" )
+    }
+    kl <- t(kl)
+    kl[which(kl == Inf)] <- max(kl[which(kl < Inf)])
+    kl[which(kl == 0)] <- 0.000000001
+
+    for(i in 1:length(g)){
+      tau[,i] <- (1/kl[,i])/sum(1/kl[,i])
+    }
+
+    for(i in 1:length(g)){
+      labels[i] <- which(tau[,i] == max(tau[,i]))
+    }
+    #Check if there is an empty group
+    for(i in 1:num_clusters){
+      if(length(which(labels == i))==0) labels[which(tau[i,] == max(tau[i,]))] <- i
+    }
+
+    #estima o p dos modelos para maximizar o tae
+    for(i in 1:num_clusters){
+      p[i] <- sum(p_graph[which(labels==i)])/length(which(labels==i))
+      if(tipo == "KR") p[i] <- round(p[i])
+    }
+
+    prevlik <- lik
+    lik <- sum(tau*kl)
+    count <- count + 1
+    if(count > max_iter){
+      convergiu = 1
+    }
+
+    if((prevlik!=0 && prevlik/lik > 0.99 && prevlik/lik < 1.01) ) convergiu <- 1
+    prevlabels <- labels
+  }
+  ret <- list(labels, p)
+  # close cluster
+  parallel::stopCluster(cl)
+
+  return(ret)
+}
+
+#====================================
+#Kmeans
+
+#' K-means for Graphs
+#'
+#' \code{kmeans.graph} clusters graphs following a k-means algorithm based on the
+#' Jensen-Shannon divergence between the spectral densities of the graphs.
+#'
+#' @param x a list containing the adjacency matrix of the graphs to be
+#' clustered.
+#'
+#' @param k an integer specifying the number of clusters.
+#'
+#' @param nstart the number of trials of k-means clusterizations. The algorithm
+#' returns the clusterization with the best silhouette.
+#'
+#' @return a vector of the same lenght of g containing the clusterization
+#' labels.
+#'
+#' @keywords k-means
+#'
+#' @references
+#' MacQueen, James. "Some methods for classification and analysis of
+#' multivariate observations." Proceedings of the fifth Berkeley symposium on
+#' mathematical statistics and probability. Vol. 1. No. 14. 1967.
+#'
+#' Lloyd, Stuart. "Least squares quantization in PCM." IEEE transactions on
+#' information theory 28.2 (1982): 129-137.
+#'
+#' @examples
+#' require(igraph)
+#' g <- list()
+#' for(i in 1:5){
+#'   g[[i]] <- get.adjacency(sample_gnp(30, p=0.2))
+#' }
+#' for(i in 6:10){
+#'   g[[i]] <- get.adjacency(sample_gnp(30, p=0.5))
+#' }
+#' res <- kmeans.graph(g, k=2, nstart=2)
+#'
+#' @export
+kmeans.graph <- function(x, k, nstart=2) {
+  sil <- -1
+  num.graphs <- length(x)
+  tmp <- spectral_density(x)
+  spectral.density <- tmp$spectral.density
+
+  if (k > nstart) nstart <- k
+
+  for (ns in 1:nstart) {
+    ## random initialization of the clusters
+    label <- sample(seq(1:k), num.graphs, replace=TRUE)
+    converged <- FALSE
+    while(converged == FALSE) {
+      centroid <- matrix(0, k, 512)
+      for (j in 1:k) {
+        for (i in 1:512) {
+          centroid[j,i] <- mean(spectral.density[which(label==j),i])
+        }
+        centroid[j,] <- centroid[j,] / trapezoidSum(tmp$x, centroid[j,])
+      }
+
+      distance <- matrix(0, num.graphs, k)
+      for (j in 1:k) {
+        tmp1 <- list()
+        tmp1$y <- centroid[j,]
+        tmp1$x <- tmp$x
+        for(i in 1:num.graphs) {
+          tmp2 <- list()
+          tmp2$y <- spectral.density[i,]
+          tmp2$x <- tmp$x
+          distance[i,j] <- sqrt(JS(tmp1, tmp2))
+        }
+      }
+
+      label.new <- array(0, num.graphs)
+      for(i in 1:num.graphs) {
+        label.new[i] <- which(distance[i,] == min(distance[i,]))[1]
+      }
+      i <- 1
+      while(i<=k) {
+        if(length(which(label.new == i)) != 0) {
+          i <- i + 1
+        }
+        else { ## there is an empty cluster
+          size.cluster <- array(0,k)
+          for(j in 1:k) {
+            size.cluster[j] <- length(which(label.new == j))
+          }
+          largest.cluster <- which(size.cluster == max(size.cluster))
+          item <- which(distance[, largest.cluster] ==
+                          max(distance[which(label.new == largest.cluster), largest.cluster]))
+          label.new[item] <- i
+          i <- 1
+        }
+      }
+
+      if(length(which(label == label.new)) == num.graphs) {
+        converged <- TRUE
+        sil.new <- mean(cluster::silhouette(label, distance_matrix(tmp))[,3])
+
+        if(sil.new > sil) {
+          sil <- sil.new
+          label.final <- label
+        }
+      }
+      label <- label.new
+    }
+  }
+  return(label.final)
+}
+
 #Kmeans auxiliary functions
-
 spectral_density <- function(x) {
   num.graphs <- length(x)
   spectrum <- list()
@@ -2840,3 +2541,351 @@ SturgesBandwidth <- function(x) {
   return(abs(max(x) - min(x))/nbins)
 }
 
+# FROM THIS POINT GROVER CODE
+#############################
+#' Degree-based eigenvalue probability
+#'
+#' \code{fast.eigenvalue.probability} returns the probability of an eigenvalue
+#' given the degree and excess degree probability.
+#'
+#' @param deg_prob The degree probability of the graph.
+#'
+#' @param q_prob The excess degree probability of the graph.
+#'
+#' @param all_k  List of sorted unique degrees greater than 1 of the graph.
+#'
+#' @param z  Complex number whose real part is the eigenvalue whose probability
+#' we want to obtain, the imaginary part is a small value (e.g., 1e-3).
+#'
+#' @param n_iter The maximum number of iterations to perform.
+#'
+#' @return A complex number whose imaginary part absolute value corresponds to
+#' the probability of the given eigenvalue.
+#'
+#' @keywords eigenvalue_probability
+#'
+#' @references
+#' Newman, M. E. J., Zhang, X., & Nadakuditi, R. R. (2019).
+#' Spectra of random networks with arbitrary degrees.
+#' Physical Review E, 99(4), 042309.
+#'
+#' @examples
+#' G <- igraph::sample_smallworld(dim = 1, size = 10, nei = 2, p = 0.2)
+#' # Obtain the degree distribution
+#' deg_prob <- c(igraph::degree_distribution(graph = G, mode = "all"),0.0)
+#' k_deg <- seq(1,length(deg_prob)) - 1
+#' # Obtain the excess degree distribution
+#' c <- sum(k_deg * deg_prob)
+#' q_prob <- c()
+#' for(k in 0:(length(deg_prob) - 1)){
+#'   aux_q <- (k + 1) * deg_prob[k + 1]/c
+#'   q_prob <- c(q_prob,aux_q)
+#' }
+#' # Obtain the sorted unique degrees greater than 1
+#' all_k <- c(1:length(q_prob))
+#' valid_idx <- q_prob != 0
+#' q_prob <- q_prob[valid_idx]
+#' all_k <- all_k[valid_idx]
+#' # Obtain the probability of the eigenvalue 0
+#' z <- 0 + 0.01*1i
+#' eigenval_prob <- -Im(fast.eigenvalue.probability(deg_prob,q_prob,all_k,z))
+#' eigenval_prob
+#'
+#' @export
+fast.eigenvalue.probability <- function(deg_prob,q_prob,all_k,z,n_iter = 5000){
+  h_z   <- 0 + 0i
+  eps <- 1e-7
+  all_k_mo <- all_k - 1
+  while(n_iter > 0){
+    new_h_z <- sum(q_prob/(1 - all_k_mo*h_z))
+    new_h_z <- new_h_z/z^2
+    # replaces H_z using the new value found
+    if(abs(h_z - new_h_z) < eps){
+      h_z <- new_h_z
+      break
+    }
+    h_z <- new_h_z
+    n_iter <- n_iter - 1
+  }
+
+  # returns the final result
+  count_z <- 0
+  for(k in 1:length(deg_prob)){
+    count_z <- count_z + (deg_prob[k])/(1 - (k - 1)*h_z)
+  }
+
+  count_z <- (count_z/z)
+
+  return (count_z)
+}
+
+#' Degree-based spectral density
+#'
+#' \code{fast.spectral.density} returns the degree-based spectral density in
+#' the interval <\code{from},\code{to}> by using npoints discretization points.
+#'
+#' @param graph The undirected unweighted graph (igraph type) whose spectral
+#' density we want to obtain.
+#'
+#' @param from Lower end of the interval that contain the eigenvalues or
+#' smallest eigenvalue of the adjacency matrix of the graph. The smallest
+#' eigenvalue is used if the value is not given.
+#'
+#' @param to  Upper end of the interval that contain the eigenvalues or largest
+#' eigenvalue of the adjacency matrix of the graph. The largest eigenvalue is
+#' used if the value is not given.
+#'
+#' @param npoints Number of discretization points of the interval <\code{from},\code{to}>.
+#'
+#' @param numCores Number of cores to use for parallelization.
+#'
+#'
+#' @return Returns the degree-based spectral density of the graph in the
+#'
+#' @keywords eigenvalue_density
+#'
+#' @references
+#' Newman, M. E. J., Zhang, X., & Nadakuditi, R. R. (2019).
+#' Spectra of random networks with arbitrary degrees.
+#' Physical Review E, 99(4), 042309.
+#'
+#' @examples
+#' G <- igraph::sample_smallworld(dim = 1, size = 100, nei = 2, p = 0.2)
+#' # Obtain the degree-based spectral density
+#' density <- fast.spectral.density(graph = G, npoints = 80, numCores = 1)
+#' density
+#'
+#' @export
+fast.spectral.density <- function(graph, from = NULL, to = NULL, npoints = 2000,
+                                  numCores = 1){
+  `%dopar%` <- foreach::`%dopar%`
+  # Number of vertices
+  n <- igraph::vcount(graph)
+  # Adjacency matrix
+  A <- NULL
+  # If 'from' or 'to' are null, then get the adjacency matrix
+  if(is.null(from) || is.null(to)){
+    A <- igraph::as_adjacency_matrix(graph,type = "both")
+  }
+  # Obtain the largest eigenvalue
+  if(is.null(to)){
+    to   <- rARPACK::eigs_sym(A,k = 1)$values[1]
+  }
+  # Obtain the smallest eigenvalue
+  if(is.null(from)){
+    from <- rARPACK::eigs_sym(A,k = 1,which = "SA")$values[1]
+  }
+  # Discretizise interval <\code{from},\code{to}> in npoints
+  bw <- (to - from)/npoints
+  x <- seq(from,to,bw)
+  y <- rep(0,length(x))
+  # Obtain the degree and excess degree distribution
+  deg_prob <- c(igraph::degree_distribution(graph = graph, mode = "all"),0.0)#/vcount(graph)
+  k_deg <- seq(1,length(deg_prob)) - 1
+  c <- sum(k_deg * deg_prob)
+  q_prob <- c()
+
+  for(k in 0:(length(deg_prob) - 1)){
+    aux_q <- (k + 1) * deg_prob[k + 1]/c
+    q_prob <- c(q_prob,aux_q)
+  }
+  # Obtain sorted unique degrees of the graph
+  all_k <- c(1:length(q_prob)) #- 1
+  valid_idx <- q_prob != 0
+  q_prob <- q_prob[valid_idx]
+  all_k <- all_k[valid_idx]
+
+  # Obtain the eigenvalue density for each discretized points by using numCores
+  # cores.
+  #doMC::registerDoMC(numCores)
+  cl <- parallel::makePSOCKcluster(numCores)
+  doParallel::registerDoParallel(cl)
+  i <- NULL
+  y <- foreach::foreach(i=1:length(x),.combine = c,.export = c("fast.eigenvalue.probability")) %dopar% {
+    z <- x[i] + 0.01*1i
+    -Im(fast.eigenvalue.probability(deg_prob,q_prob,all_k,z))
+  }
+  # close cluster
+  parallel::stopCluster(cl)
+  # Returns density function
+  return (list("x" = x,"y" = y))
+}
+
+#' Degree-based graph parameter estimator
+#'
+#' \code{fast.graph.param.estimator} estimates the parameter of the complex
+#' network model using the degree-based spectral density and ternary search.
+#'
+#' @param graph The undirected unweighted graph (igraph type).
+#'
+#' @param model Either a string or a function:
+#'
+#' A string that indicates one of the following models: "ER" (Erdos-Renyi random
+#' graph model), "GRG" (geometric random graph model), "WS" (Watts-Strogatz
+#' model), and "BA" (Barabasi-Albert model).
+#'
+#' A function that returns a Graph generated by a graph model. It must contain
+#' two arguments: the first one corresponds to the graph size and the second to
+#' the parameter of the model.
+#'
+#' @param lo Smallest parameter value that the graph model can take.
+#'
+#' If ``model'' is an string, then the default value of 0 is used for the
+#' predefined models ("ER", "GRG", "WS", and "BA").
+#'
+#' @param hi Largest parameter value that the graph model can take.
+#'
+#' If ``model'' is an string, then the default values are used for the
+#' predefined models 1 for "ER", sqrt(2) for "GRG", 1 for "WS", and 5 for "BA").
+#'
+#' @param eps Desired precision of the parameter estimate.
+#'
+#' @param from Lower end of the interval that contain the eigenvalues to
+#' generate the degree-based spectral densities. The smallest eigenvalue of the
+#' adjacency matrix corresponding to ``graph'' is used if the value is not given.
+#'
+#' @param to  Upper end of the interval that contain the eigenvalues to generate
+#' the degree-based spectral densities. The largest eigenvalue of the adjacency
+#' matrix corresponding to ``graph'' is used if the value is not given.
+#'
+#' @param npoints Number of points to discretize the interval <\code{from},\code{to}>.
+#'
+#' @param numCores Number of cores to use for parallelization.
+#'
+#'
+#' @return Returns a list containing:
+#' \item{param}{The degree-based parameter estimate. For the "ER", "GRG", "WS",
+#' and "BA" models, the parameter corresponds to the probability to connect a
+#' pair of vertices, the radius used to construct the geometric graph in a unit
+#' square, the probability to reconnect a vertex, and the scaling exponent
+#' respectively.}
+#' \item{dist}{The L1 distance between the observed graph and the graph model
+#' with the estimated value.}
+#'
+#' @keywords degree_based_parameter_estimation
+#'
+#' @examples
+#' ### Example giving only the name of the model to use
+#' G <- igraph::sample_smallworld(dim = 1, size = 15, nei = 2, p = 0.2)
+#' # Obtain the parameter of the WS model
+#' estimated.parameter <- fast.graph.param.estimator(G, "WS",lo = 0,hi = 0.5,eps = 1e-1, npoints = 10,
+#'                                                   numCores = 1)
+#' estimated.parameter
+#' ### Example giving a function instead of a model (uncomment to execute)
+#' # Defining the model to use
+#' #G <- igraph::sample_smallworld(dim = 1, size = 5000, nei = 2, p = 0.2)
+#' #K <- as.integer(igraph::ecount(G)/igraph::vcount(G))
+#' #fun_WS <- function(n, param, nei = K){
+#' # return (igraph::sample_smallworld(dim = 1,size = n, nei = nei,p = param))
+#' #}
+#' # Obtain the parameter of the WS model
+#' #estimated.parameter <- fast.graph.param.estimator(G, fun_WS, lo = 0.0, hi = 1.0,
+#' #                                                   npoints = 100, numCores = 2)
+#' #estimated.parameter
+#'
+#' @export
+fast.graph.param.estimator <- function(graph, model, lo = NULL, hi = NULL,
+                                       eps = 1e-3, from = NULL, to = NULL,
+                                       npoints = 2000, numCores = 1){
+
+  # When the model is a function then check if the smallest and largest values
+  # that the parameter can take was also provided
+  if(class(model) == "function" && (is.null(lo) || is.null(hi))){
+    stop("You must specify the largest and smallest parameter value that the graph model can take")
+  }
+  # If 'model' is a character then define the parameter interval search.
+  # Also recover the functions that generate each model
+  fun <- model
+  if(class(model) == "character"){
+    if(model == "ER"){
+      if(is.null(lo))
+        lo <- 0
+      if(is.null(hi))
+        hi <- 1
+      fun <- matchFunction(model)
+    } else if(model == "GRG"){
+      if(is.null(lo))
+        lo <- 0
+      if(is.null(hi))
+        hi <- sqrt(2)
+      fun <- matchFunction(model)
+    } else if(model == "WS"){
+      if(is.null(lo))
+        lo <- 0
+      if(is.null(hi))
+        hi <- 1
+      fun <- WSfun(as.integer(igraph::ecount(graph)/(igraph::vcount(graph))))
+    } else if(model == "BA"){
+      if(is.null(lo))
+        lo <- 0
+      if(is.null(hi))
+        hi <- 5
+      fun <- BAfun(as.integer(igraph::ecount(graph)/(igraph::vcount(graph))))
+    } else {
+      stop("The 'model' that you specified is not allowed, the allowed model are: \"ER\",\"GRG\",\"WS\" or \"BA\"")
+    }
+  }
+
+  # Adjacency matrix
+  A <- NULL
+  # If 'from' or 'up' are null then get the adjacency matrix
+  if(is.null(from) || is.null(to)){
+    A <- igraph::as_adjacency_matrix(graph,type = "both")
+  }
+  # Obtain largest eigenvalue
+  if(is.null(to)){
+    to <- rARPACK::eigs_sym(A,k = 1)$values[1]
+  }
+  # Obtain smallest eigenvalue
+  if(is.null(from)){
+    from <- rARPACK::eigs_sym(A,k = 1,which = "SA")$values[1]
+  }
+  # Obtain the number of vertices of the graph
+  n <- igraph::vcount(graph)
+  # Obtain density function of the observed graph
+  observed_graph_density <- fast.spectral.density(graph, from = from, to = to,
+                                                  npoints = npoints,
+                                                  numCores = numCores)
+  # Make ternary search
+  dist_to_1 <- NULL
+  dist_to_2 <- NULL
+  while(abs(lo - hi) > eps && lo < hi){
+    mid1 <- (2*lo + hi)/3
+    mid2 <- (2*hi + lo)/3
+    # Generate graph using parameter mid1
+    if(class(model) == 'function'){
+      Graph1 <- fun(n,mid1)
+    } else {
+      Graph1 <- fun(n,mid1, as_matrix = FALSE)
+    }
+    density1 <- fast.spectral.density(Graph1, from = from, to = to,
+                                      npoints = npoints,
+                                      numCores = numCores)
+    # Free memory allocated by Graph1
+    rm(Graph1)
+    # Generate graph using parameter mid2
+    if(class(model) == 'function'){
+      Graph2 <- fun(n,mid2)
+    } else {
+      Graph2 <- fun(n,mid2, as_matrix = FALSE)
+    }
+    density2 <- fast.spectral.density(Graph2, from = from, to = to,
+                                      npoints = npoints,
+                                      numCores = numCores)
+    # Free memory allocated by Graph2
+    rm(Graph2)
+    # Reduce the interval search
+    dist_to_1 <- trapezoidSum(observed_graph_density$x,abs(observed_graph_density$y - density1$y))
+    dist_to_2 <- trapezoidSum(observed_graph_density$x,abs(observed_graph_density$y - density2$y))
+    if(dist_to_1 < dist_to_2){
+      hi <- mid2
+    } else {
+      lo <- mid1
+    }
+  }
+  # The search was finished, now save the parameter and the distance
+  param = (lo + hi)/2
+  dist  = (dist_to_1 + dist_to_2)/2
+
+  return (list("param" = param,"dist" = dist))
+}

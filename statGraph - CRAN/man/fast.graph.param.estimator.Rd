@@ -49,7 +49,7 @@ adjacency matrix corresponding to ``graph'' is used if the value is not given.}
 the degree-based spectral densities. The largest eigenvalue of the adjacency
 matrix corresponding to ``graph'' is used if the value is not given.}
 
-\item{npoints}{Number of points to discretize the interval \[from,to\].}
+\item{npoints}{Number of points to discretize the interval <\code{from},\code{to}>.}
 
 \item{numCores}{Number of cores to use for parallelization.}
 }
@@ -69,21 +69,22 @@ network model using the degree-based spectral density and ternary search.
 }
 \examples{
 ### Example giving only the name of the model to use
-G <- igraph::sample_smallworld(dim = 1, size = 10, nei = 2, p = 0.2)
+G <- igraph::sample_smallworld(dim = 1, size = 15, nei = 2, p = 0.2)
 # Obtain the parameter of the WS model
-estimated.parameter <- fast.graph.param.estimator(G, "WS", npoints = 10,
+estimated.parameter <- fast.graph.param.estimator(G, "WS",lo = 0,hi = 0.5,eps = 1e-1, npoints = 10,
                                                   numCores = 1)
 estimated.parameter
-### Example giving a function instead of a model
+### Example giving a function instead of a model (uncomment to execute)
 # Defining the model to use
-K <- as.integer(igraph::ecount(G)/igraph::vcount(G))
-fun_WS <- function(n, param, nei = K){
-  return (igraph::sample_smallworld(dim = 1,size = n, nei = nei,p = param))
-}
+#G <- igraph::sample_smallworld(dim = 1, size = 5000, nei = 2, p = 0.2)
+#K <- as.integer(igraph::ecount(G)/igraph::vcount(G))
+#fun_WS <- function(n, param, nei = K){
+# return (igraph::sample_smallworld(dim = 1,size = n, nei = nei,p = param))
+#}
 # Obtain the parameter of the WS model
-estimated.parameter <- fast.graph.param.estimator(G, fun_WS, lo = 0, hi = 1,
-                                                  npoints = 10, numCores = 1)
-estimated.parameter
+#estimated.parameter <- fast.graph.param.estimator(G, fun_WS, lo = 0.0, hi = 1.0,
+#                                                   npoints = 100, numCores = 2)
+#estimated.parameter
 
 }
 \keyword{degree_based_parameter_estimation}

@@ -4,7 +4,7 @@
 \alias{gCEM}
 \title{Clustering Expectation-Maximization for Graphs (gCEM)}
 \usage{
-gCEM(g, model, num_clusters, ncores = 1)
+gCEM(g, model, num_clusters, max_iter = 10, ncores = 1)
 }
 \arguments{
 \item{g}{a list containing the adjacency matrix of the graphs to be
@@ -17,33 +17,34 @@ model).}
 
 \item{num_clusters}{an integer specifying the number of clusters.}
 
-\item{ncores}{the number of cores used in the parallel processing. The
+\item{max_iter}{the maximum number of expectation-maximization steps to execute.}
+
+\item{ncores}{the number of cores to be used for the parallel processing. The
 default value is 1.}
 }
 \value{
-a vector containing two fields:
-labels a vector of the same length of g containing the clusterization labels;
-p a vector of length equals to num_clusters.
+a list containing three fields:
+labels a vector of the same lenght of g containing the clusterization labels;
+p a vector of length equals to num_clusters;
 }
 \description{
-\code{gCEM} clusters graphs following an expectation-maximization algorithm
-based on the Kullback-Leibler divergence between the spectral densities of
-the graph and of the random graph model.
+\code{gCEM} clusters graphs following an expectation-maximization algorithm based
+on the Kullback-Leibler divergence between the spectral densities of the
+graph and of the random graph model.
 }
 \examples{
-g <- list()
-for(i in 1:3){
-  g[[i]] <- igraph::get.adjacency(igraph::sample_smallworld(dim=1, size=30, nei=2 ,p=0))
-}
-for(i in 4:6){
-  g[[i]] <- igraph::get.adjacency(igraph::sample_smallworld(dim=1, size=30, nei=2 ,p=1))
-}
-res <- gCEM(g, model="WS", num_clusters=2, ncores=2)
-res
-
+require(igraph)
+ g <- list()
+ for(i in 1:2){
+   g[[i]] <- igraph::get.adjacency(igraph::sample_gnp(n=10, p=0.5))
+ }
+ for(i in 3:4){
+   g[[i]] <- igraph::get.adjacency(igraph::sample_gnp(n=10, p=1))
+ }
+ res <- gCEM(g, model="ER", num_clusters=2, max_iter=1, ncores=1)
 }
 \references{
-Celeux, Gilles, and Govaert, Gerard. "Gaussian parsimonious clustering
+Celeux, Gilles, and Gerard Govaert. "Gaussian parsimonious clustering
 models." Pattern recognition 28.5 (1995): 781-793.
 }
 \keyword{gCEM}
