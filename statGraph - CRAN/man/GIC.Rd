@@ -81,7 +81,7 @@ distance between the observed graph and the graph model.
 undirected graph and a given graph model.
 }
 \examples{
-A <- as.matrix(igraph::get.adjacency(igraph::sample_gnp(n=100, p=0.5)))
+A <- as.matrix(igraph::get.adjacency(igraph::sample_gnp(n=50, p=0.5)))
 # Using a string to indicate the graph model
 result1 <- GIC(A, "ER", 0.5)
 result1

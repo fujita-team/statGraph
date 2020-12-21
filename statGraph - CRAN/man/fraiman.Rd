@@ -32,6 +32,7 @@ under the alternative that at least one subpopulation has a different mean
 network.
 }
 \examples{
+\dontrun{
 require(igraph)
 set.seed(42)
 
@@ -52,6 +53,7 @@ for(i in 1:10){
 }
 d <- list(a,b)
 k <- fraiman(d, printResult = TRUE)
+}
 
 }
 \references{
