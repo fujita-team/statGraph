@@ -4,16 +4,10 @@
 \alias{fast.spectral.density}
 \title{Degree-based spectral density}
 \usage{
-fast.spectral.density(
-  graph,
-  from = NULL,
-  to = NULL,
-  npoints = 2000,
-  numCores = 1
-)
+fast.spectral.density(G, from = NULL, to = NULL, npoints = 2000, numCores = 1)
 }
 \arguments{
-\item{graph}{The undirected unweighted graph (igraph type) whose spectral
+\item{G}{The undirected unweighted graph (igraph type) whose spectral
 density we want to obtain.}
 
 \item{from}{Lower end of the interval that contain the eigenvalues or
@@ -29,16 +23,23 @@ used if the value is not given.}
 \item{numCores}{Number of cores to use for parallelization.}
 }
 \value{
-Returns the degree-based spectral density of the graph in the
+A list with class "statGraph" containing the following components:
+\item{method}{a string indicating the used method.}
+\item{info}{a string showing details about the method.}
+\item{data.name}{a string with the data's name(s).}
+\item{x}{x-value of the the degree-based spectral density of the graph.}
+\item{y}{y-value of the the degree-based spectral density of the graph.}
 }
 \description{
 \code{fast.spectral.density} returns the degree-based spectral density in
 the interval <\code{from},\code{to}> by using npoints discretization points.
 }
 \examples{
+set.seed(42)
 G <- igraph::sample_smallworld(dim = 1, size = 100, nei = 2, p = 0.2)
+
 # Obtain the degree-based spectral density
-density <- fast.spectral.density(graph = G, npoints = 80, numCores = 1)
+density <- fast.spectral.density(G = G, npoints = 80, numCores = 1)
 density
 
 }

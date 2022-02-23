@@ -4,13 +4,13 @@
 \alias{graph.acf}
 \title{Auto Correlation Function Estimation for Graphs}
 \usage{
-graph.acf(x, plot = TRUE)
+graph.acf(G, plot = TRUE)
 }
 \arguments{
-\item{x}{a list of adjacency (symmetric) matrices of undirected graphs. For
-unweighted graphs, each matrix contains only 0s and 1s. For weighted graphs,
-each matrix may contains real values that correspond to the weights of the
-edges.}
+\item{G}{a list of undirected graphs (igraph type) or their adjacency
+matrices. The adjacency matrix of an unweighted graph contains only 0s and
+1s, while the weighted graph may have nonnegative real values that correspond
+to the weights of the edges.}
 
 \item{plot}{logical. If TRUE (default) the graph.acf is plotted.}
 }
@@ -22,20 +22,20 @@ The function \code{graph.acf} computes estimates of the autocorrelation
 function for graphs.
 }
 \examples{
-require(igraph)
-x <- list()
+set.seed(1)
+G <- list()
 p <- array(0, 100)
 p[1:3] <- rnorm(3)
 for (t in 4:100) {
-    p[t] <- 0.5*p[t-3] + rnorm(1)
+  p[t] <- 0.5*p[t-3] + rnorm(1)
 }
 ma <- max(p)
 mi <- min(p)
 p <- (p - mi)/(ma-mi)
 for (t in 1:100) {
-    x[[t]] <- get.adjacency(erdos.renyi.game(100, p[t]))
+  G[[t]] <- igraph::sample_gnp(100, p[t])
 }
-graph.acf(x, plot=TRUE)
+graph.acf(G, plot=TRUE)
 
 }
 \references{

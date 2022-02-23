@@ -4,33 +4,39 @@
 \alias{graph.entropy}
 \title{Graph spectral entropy}
 \usage{
-graph.entropy(A = NULL, bandwidth = "Silverman", eigenvalues = NULL)
+graph.entropy(G = NULL, bandwidth = "Silverman", eigenvalues = NULL)
 }
 \arguments{
-\item{A}{the adjacency matrix of the graph. For an unweighted graph, it
-contains only 0s and 1s. For a weighted graph, it may contain nonnegative
-real numbers that correspond to the weights of the edges.}
+\item{G}{the undirected graph (igraph type) or its adjacency matrix. The
+adjacency matrix of an unweighted graph contains only 0s and 1s, while the
+weighted graph may have nonnegative real values that correspond to the
+weights of the edges.}
 
 \item{bandwidth}{string showing which criterion is used to choose the
 bandwidth during the spectral density estimation. Choose between the
-following criteria: "Silverman" (default), "Sturges" and "bcv".
-"bcv" is an abbreviation of biased cross-validation.}
+following criteria: "Silverman" (default), "Sturges", "bcv", "ucv" and "SJ".
+"bcv" is an abbreviation of biased cross-validation, while "ucv" means
+unbiased cross-validation. "SJ"  implements the methods of Sheather & Jones
+(1991) to select the bandwidth using pilot estimation of derivatives.}
 
 \item{eigenvalues}{optional parameter. It contains the eigenvalues of matrix
-A. Then, if the eigenvalues of matrix A have already been computed, this
-parameter can be used instead of A. If no value is passed, then the
-eigenvalues of A will be computed by 'graph.entropy'.}
+G. Then, if the eigenvalues of matrix G have already been computed, this
+parameter can be used instead of G. If no value is passed, then the
+eigenvalues of G will be computed by 'graph.entropy'.}
 }
 \value{
-a real number corresponding to the graph spectral entropy.
+A list with class "statGraph" containing the following components:
+\item{method}{a string indicating the used method.}
+\item{info}{a string showing details about the method.}
+\item{data.name}{a string with the data's name(s).}
+\item{entropy}{a real number corresponding to the graph spectral entropy.}
 }
 \description{
 \code{graph.entropy} returns the spectral entropy of an undirected graph.
 }
 \examples{
 G <- igraph::sample_gnp(n=100, p=0.5)
-A <- as.matrix(igraph::get.adjacency(G))
-entropy <- graph.entropy(A)
+entropy <- graph.entropy(G)
 entropy
 
 }
@@ -44,5 +50,10 @@ Silverman, B. W. (1986) _Density Estimation_.  London: Chapman and Hall.
 
 Sturges, H. A. The Choice of a Class Interval. _J. Am. Statist. Assoc._,
 *21*, 65-66.
+
+Sheather, S. J. and Jones, M. C. (1991). A reliable data-based bandwidth
+selection method for kernel density estimation.
+_Journal of the Royal Statistical Society series B_, 53, 683-690.
+http://www.jstor.org/stable/2345597.
 }
 \keyword{spectral_entropy}

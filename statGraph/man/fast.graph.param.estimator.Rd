@@ -5,7 +5,7 @@
 \title{Degree-based graph parameter estimator}
 \usage{
 fast.graph.param.estimator(
-  graph,
+  G,
   model,
   lo = NULL,
   hi = NULL,
@@ -17,7 +17,7 @@ fast.graph.param.estimator(
 )
 }
 \arguments{
-\item{graph}{The undirected unweighted graph (igraph type).}
+\item{G}{The undirected unweighted graph (igraph type).}
 
 \item{model}{Either a string or a function:
 
@@ -54,13 +54,16 @@ matrix corresponding to ``graph'' is used if the value is not given.}
 \item{numCores}{Number of cores to use for parallelization.}
 }
 \value{
-Returns a list containing:
+A list with class "statGraph" containing the following components:
+\item{method}{a string indicating the used method.}
+\item{info}{a string showing details about the method.}
+\item{data.name}{a string with the data's name(s).}
 \item{param}{The degree-based parameter estimate. For the "ER", "GRG", "WS",
 and "BA" models, the parameter corresponds to the probability to connect a
 pair of vertices, the radius used to construct the geometric graph in a unit
 square, the probability to reconnect a vertex, and the scaling exponent
 respectively.}
-\item{dist}{The L1 distance between the observed graph and the graph model
+\item{L1_dist}{The L1 distance between the observed graph and the graph model
 with the estimated value.}
 }
 \description{
@@ -68,23 +71,32 @@ with the estimated value.}
 network model using the degree-based spectral density and ternary search.
 }
 \examples{
+set.seed(42)
+
 ### Example giving only the name of the model to use
 G <- igraph::sample_smallworld(dim = 1, size = 15, nei = 2, p = 0.2)
+
 # Obtain the parameter of the WS model
-estimated.parameter <- fast.graph.param.estimator(G, "WS",lo = 0,hi = 0.5,eps = 1e-1, npoints = 10,
+estimated.parameter1 <- fast.graph.param.estimator(G, "WS", lo = 0.1, hi = 0.5,
+                                                  eps = 1e-1, npoints = 10,
                                                   numCores = 1)
-estimated.parameter
-### Example giving a function instead of a model (uncomment to execute)
+estimated.parameter1
+
+\dontrun{
+### Example giving a function instead of a model
+
 # Defining the model to use
-#G <- igraph::sample_smallworld(dim = 1, size = 5000, nei = 2, p = 0.2)
-#K <- as.integer(igraph::ecount(G)/igraph::vcount(G))
-#fun_WS <- function(n, param, nei = K){
-# return (igraph::sample_smallworld(dim = 1,size = n, nei = nei,p = param))
-#}
+G <- igraph::sample_smallworld(dim = 1, size = 5000, nei = 2, p = 0.2)
+K <- as.integer(igraph::ecount(G)/igraph::vcount(G))
+fun_WS <- function(n, param, nei = K){
+ return (igraph::sample_smallworld(dim = 1,size = n, nei = nei, p = param))
+}
+
 # Obtain the parameter of the WS model
-#estimated.parameter <- fast.graph.param.estimator(G, fun_WS, lo = 0.0, hi = 1.0,
-#                                                   npoints = 100, numCores = 2)
-#estimated.parameter
+estimated.parameter2 <- fast.graph.param.estimator(G, fun_WS, lo = 0.0, hi = 1.0,
+                                                   npoints = 100, numCores = 2)
+estimated.parameter2
+}
 
 }
 \keyword{degree_based_parameter_estimation}

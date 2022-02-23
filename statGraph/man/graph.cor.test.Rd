@@ -4,32 +4,34 @@
 \alias{graph.cor.test}
 \title{Test for Association / Correlation Between Paired Samples of Graphs}
 \usage{
-graph.cor.test(x, y)
+graph.cor.test(G1, G2)
 }
 \arguments{
-\item{x}{a list of adjacency (symmetric) matrices of undirected graphs.
-For unweighted graphs, each matrix contains only 0s and 1s. For weighted
-graphs, each matrix contains real values that correspond to the weights of
-the edges.}
+\item{G1}{a list of undirected graphs (igraph type) or their adjacency
+matrices. The adjacency matrix of an unweighted graph contains only 0s and
+1s, while the weighted graph may have nonnegative real values that correspond
+to the weights of the edges.}
 
-\item{y}{a list with the same length of 'x'. It contains adjacency
-(symmetric) matrices of undirected graphs. For unweighted graphs, each matrix
-contains only 0s and 1s. For weighted graphs, each matrix may contain
-real values that correspond to the weights of the edges.}
+\item{G2}{a list of undirected graphs (igraph type) or their adjacency
+matrices. The adjacency matrix of an unweighted graph contains only 0s and
+1s, while the weighted graph may have nonnegative real values that correspond
+to the weights of the edges.}
 }
 \value{
-\item{statistic}{ the value of the test statistic.}
+A list with class "htest" containing the following components:
+\item{statistic}{the value of the test statistic.}
 \item{p.value}{the p-value of the test.}
-\item{estimate}{the estimated measure of association 'rho'.}
+\item{method}{a string indicating the used method.}
+\item{data.name}{a string with the data's name(s).}
+\item{estimates}{the estimated measure of association 'rho'.}
 }
 \description{
 \code{graph.cor.test} tests for association between paired samples of graphs,
 using Spearman's rho correlation coefficient.
 }
 \examples{
-require(igraph)
-x <- list()
-y <- list()
+set.seed(1)
+G1 <- G2 <- list()
 
 p <- MASS::mvrnorm(50, mu=c(0,0), Sigma=matrix(c(1, 0.5, 0.5, 1), 2, 2))
 
@@ -39,11 +41,10 @@ p[,1] <- (p[,1] - mi)/(ma - mi)
 p[,2] <- (p[,2] - mi)/(ma - mi)
 
 for (i in 1:50) {
-    x[[i]] <- get.adjacency(erdos.renyi.game(50, p[i,1]))
-    y[[i]] <- get.adjacency(erdos.renyi.game(50, p[i,2]))
+  G1[[i]] <- igraph::sample_gnp(50, p[i,1])
+  G2[[i]] <- igraph::sample_gnp(50, p[i,2])
 }
-
-graph.cor.test(x, y)
+graph.cor.test(G1, G2)
 
 }
 \references{

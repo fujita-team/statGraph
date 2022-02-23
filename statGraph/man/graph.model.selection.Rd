@@ -5,18 +5,20 @@
 \title{Graph model selection}
 \usage{
 graph.model.selection(
-  A,
+  G,
   models = NULL,
   parameters = NULL,
   eps = 0.01,
   bandwidth = "Silverman",
-  eigenvalues = NULL
+  eigenvalues = NULL,
+  ...
 )
 }
 \arguments{
-\item{A}{the adjacency (symmetric) matrix of an undirected graph. For an
-unweighted graph it contains only 0s and 1s. For a weighted graph, it
-contains real values that correspond to the weights of the edges.}
+\item{G}{the undirected graph (igraph type) or its adjacency matrix. The
+adjacency matrix of an unweighted graph contains only 0s and 1s, while the
+weighted graph may have nonnegative real values that correspond to the
+weights of the edges.}
 
 \item{models}{either a vector of strings, a list of functions or a list of
 arrays describing graph models:
@@ -67,21 +69,29 @@ which the parameter corresponds to the scaling exponent.}
 
 \item{eps}{precision of the grid (default is 0.01).}
 
-\item{bandwidth}{string indicating which criterion will be used to choose
-the bandwidth for the spectral density estimation. The available criteria are
-"Silverman" (default) and "Sturges".}
+\item{bandwidth}{string showing which criterion is used to choose the
+bandwidth during the spectral density estimation. Choose between the
+following criteria: "Silverman" (default), "Sturges", "bcv", "ucv" and "SJ".
+"bcv" is an abbreviation of biased cross-validation, while "ucv" means
+unbiased cross-validation. "SJ"  implements the methods of Sheather & Jones
+(1991) to select the bandwidth using pilot estimation of derivatives.}
 
 \item{eigenvalues}{optional parameter. It contains the eigenvalues of matrix
-A. Then, it can be used when the eigenvalues of A were previously computed.
-If no value is passed, then the eigenvalues of A will be computed by
+G. Then, it can be used when the eigenvalues of G were previously computed.
+If no value is passed, then the eigenvalues of G will be computed by
 'graph.model.selection'.}
+
+\item{...}{additional arguments to be used for \code{graph.param.estimator()}
+function.}
 }
 \value{
-A list containing:
+A list with class "statGraph" containing the following components:
+\item{method}{a string indicating the used method.}
+\item{info}{a string showing details about the method.}
 \item{model}{the indice(s) or name(s) of the selected model(s), i. e. the
 model(s) that minimize(s) the Graph Information Criterion (GIC).}
 \item{estimates}{a matrix in which each row corresponds to a model, the
-column "p" corresponds to the parameter estimate, and the column "GIC"
+column "param" corresponds to the parameter estimate, and the column "GIC"
 corresponds to the Graph Information Criterion (GIC), i. e. the
 Kullback-Leibler divergence between the observed graph and the model.}
 }
@@ -91,23 +101,28 @@ observed graph according to the Graph Information Criterion (GIC).
 }
 \examples{
 
-require(igraph)
-A <- as.matrix(get.adjacency(erdos.renyi.game(30, p=0.5)))
+## Example using an igraph object as input data
+set.seed(1)
+G <- igraph::sample_gnp(n=30, p=0.5)
+
 # Using strings to indicate the graph models
-result1 <- graph.model.selection(A, models=c("ER", "WS"), eps=0.5)
+result1 <- graph.model.selection(G, models=c("ER", "WS"), eps=0.5)
 result1
-# Using functions to describe the graph models
+
+
+## Using functions to describe the graph models
 # Erdos-Renyi graph
 model1 <- function(n, p) {
-   return(as.matrix(get.adjacency(erdos.renyi.game(n, p))))
+  return(igraph::sample_gnp(n, p))
 }
-# Watts-Strougatz graph
+# Watts-Strogatz small-world graph
 model2 <- function(n, pr, K=8) {
-    return(as.matrix(get.adjacency(watts.strogatz.game(1, n, K, pr))))
+  return(igraph::sample_smallworld(1, n, K, pr))
 }
-parameters <- list(seq(0, 1, 0.5), seq(0, 1, 0.5))
-result2 <- graph.model.selection(A, list(model1, model2), parameters)
+parameters <- list(seq(0.01, 0.99, 0.49), seq(0.01, 0.99, 0.49))
+result2 <- graph.model.selection(G, list(model1, model2), parameters)
 result2
+
 }
 \references{
 Takahashi, D. Y., Sato, J. R., Ferreira, C. E. and Fujita A. (2012)
@@ -119,5 +134,10 @@ Silverman, B. W. (1986) _Density Estimation_.  London: Chapman and Hall.
 
 Sturges, H. A. The Choice of a Class Interval. _J. Am. Statist. Assoc._,
 *21*, 65-66.
+
+Sheather, S. J. and Jones, M. C. (1991). A reliable data-based bandwidth
+selection method for kernel density estimation.
+_Journal of the Royal Statistical Society series B_, 53, 683-690.
+http://www.jstor.org/stable/2345597.
 }
 \keyword{model_selection}

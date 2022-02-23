@@ -5,7 +5,7 @@
 \title{Multidimensional scaling of graphs}
 \usage{
 graph.mult.scaling(
-  x,
+  G,
   plot = TRUE,
   bandwidth = "Silverman",
   type = "n",
@@ -14,17 +14,20 @@ graph.mult.scaling(
 )
 }
 \arguments{
-\item{x}{a list of adjacency (symmetric) matrices of undirected graphs. For
-unweighted graphs, each matrix contains only 0s and 1s. For weighted graphs,
-each matrix may contains real values that correspond to the weights of the
-edges.}
+\item{G}{a list of undirected graphs (igraph type) or their adjacency
+matrices. The adjacency matrix of an unweighted graph contains only 0s and
+1s, while the weighted graph may have nonnegative real values that correspond
+to the weights of the edges.}
 
 \item{plot}{logical. If TRUE (default) the points chosen to represent the
 Jensen-Shannon divergence between graphs are plotted.}
 
-\item{bandwidth}{character string indicating which criterion will be used
-to choose the bandwidth for the spectral density estimation. The available
-criteria are "Silverman" (default) and "Sturges".}
+\item{bandwidth}{string showing which criterion is used to choose the
+bandwidth during the spectral density estimation. Choose between the
+following criteria: "Silverman" (default), "Sturges", "bcv", "ucv" and "SJ".
+"bcv" is an abbreviation of biased cross-validation, while "ucv" means
+unbiased cross-validation. "SJ"  implements the methods of Sheather & Jones
+(1991) to select the bandwidth using pilot estimation of derivatives.}
 
 \item{type}{what type of plot should be drawn. The defaut value is '"n"',
 which indicates that the points will not be plotted (i. e. only the labels
@@ -36,9 +39,13 @@ of the graphs will be plotted).}
 'graphics' package for the complete list.}
 }
 \value{
-A matrix in which each column corresponds to a coordinate and each
+A list with class "statGraph" containing the following components:
+\item{method}{a string indicating the used method.}
+\item{info}{a string showing details about the method.}
+\item{data.name}{a string with the data's name(s).}
+\item{values}{A matrix in which each column corresponds to a coordinate and each
 row corresponds to a graph (point). Then, each row gives the coordinates of
-the points chosen to represent the Jensen-Shannon divergence between graphs.
+the points chosen to represent the Jensen-Shannon divergence between graphs.}
 }
 \description{
 \code{graph.mult.scaling} performs multidimensional scaling of graphs. It
@@ -47,23 +54,18 @@ takes the Jensen-Shannon divergence between graphs (JS) and uses the
 that the distances between the points are similar to JS.
 }
 \examples{
-require(igraph)
-g <- list()
+set.seed(1)
+G <- list()
 for (i in 1:5) {
-    g[[i]] <- as.matrix(get.adjacency(
-                        erdos.renyi.game(50, 0.5, type="gnp",
-                                         directed = FALSE)))
+  G[[i]] <- igraph::sample_gnp(50, 0.5)
 }
 for (i in 6:10) {
-    g[[i]] <- as.matrix(get.adjacency(
-                        watts.strogatz.game(1, 50, 8, 0.2)))
+  G[[i]] <- igraph::sample_smallworld(1, 50, 8, 0.2)
 }
 for (i in 11:15) {
-    g[[i]] <- as.matrix(get.adjacency(
-                        barabasi.game(50, power = 1,
-                                      directed = FALSE)))
+  G[[i]] <- igraph::sample_pa(50, power = 1, directed = FALSE)
 }
-graph.mult.scaling(g)
+graph.mult.scaling(G)
 
 }
 \references{
@@ -76,5 +78,10 @@ Silverman, B. W. (1986) _Density Estimation_.  London: Chapman and Hall.
 
 Sturges, H. A. The Choice of a Class Interval. _J. Am. Statist. Assoc._,
 *21*, 65-66.
+
+Sheather, S. J. and Jones, M. C. (1991). A reliable data-based bandwidth
+selection method for kernel density estimation.
+_Journal of the Royal Statistical Society series B_, 53, 683-690.
+http://www.jstor.org/stable/2345597.
 }
 \keyword{multidimensional_scaling}

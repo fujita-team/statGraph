@@ -5,7 +5,7 @@
 \title{Graph Information Criterion (GIC)}
 \usage{
 GIC(
-  A,
+  G,
   model,
   p = NULL,
   bandwidth = "Silverman",
@@ -14,9 +14,10 @@ GIC(
 )
 }
 \arguments{
-\item{A}{the adjacency matrix of the graph. For an unweighted graph it
-contains only 0s and 1s. For a weighted graph, it may contain nonnegative
-real values that correspond to the weights of the edges.}
+\item{G}{the undirected graph (igraph type) or its adjacency matrix. The
+adjacency matrix of an unweighted graph contains only 0s and 1s, while the
+weighted graph may have nonnegative real values that correspond to the
+weights of the edges.}
 
 \item{model}{either a list, a string, a function or a matrix describing a
 graph model:
@@ -62,36 +63,44 @@ and the scaling exponent, for the "BA" model (Barabasi-Albert model).}
 
 \item{bandwidth}{string showing which criterion is used to choose the
 bandwidth during the spectral density estimation. Choose between the
-following criteria: "Silverman" (default), "Sturges" and "bcv".
-"bcv" is an abbreviation of biased cross-validation.}
+following criteria: "Silverman" (default), "Sturges", "bcv", "ucv" and "SJ".
+"bcv" is an abbreviation of biased cross-validation, while "ucv" means
+unbiased cross-validation. "SJ"  implements the methods of Sheather & Jones
+(1991) to select the bandwidth using pilot estimation of derivatives.}
 
 \item{eigenvalues}{optional parameter. It contains the eigenvalues of matrix
-A. Then, it can be used when the eigenvalues of A were previously computed.
-If no value is passed, then the eigenvalues of A will be computed by 'GIC'.}
+G. Then, it can be used when the eigenvalues of G were previously computed.
+If no value is passed, then the eigenvalues of G will be computed by 'GIC'.}
 
 \item{dist}{string indicating if you want to use the "KL" (default) or "L2"
 distances. "KL" means Kullback-Leibler divergence.}
 }
 \value{
-A real number corresponding to the Kullback-Leibler divergence or L2
-distance between the observed graph and the graph model.
+A list with class "statGraph" containing the following components:
+\item{method}{a string indicating the used method.}
+\item{info}{a string showing details about the method.}
+\item{data.name}{a string with the data's name(s).}
+\item{value}{A real number corresponding to the Kullback-Leibler divergence
+or L2 distance between the observed graph and the graph model..}
 }
 \description{
 \code{GIC} returns the Kullback-Leibler divergence or L2 distance between an
 undirected graph and a given graph model.
 }
 \examples{
-A <- as.matrix(igraph::get.adjacency(igraph::sample_gnp(n=50, p=0.5)))
+set.seed(1)
+G <- igraph::sample_gnp(n=50, p=0.5)
+
 # Using a string to indicate the graph model
-result1 <- GIC(A, "ER", 0.5)
+result1 <- GIC(G, "ER", 0.5)
 result1
 
 # Using a function to describe the graph model
 # Erdos-Renyi graph
 model <- function(n, p) {
-   return(as.matrix(igraph::get.adjacency(igraph::sample_gnp(n, p))))
+   return(igraph::sample_gnp(n, p))
 }
-result2 <- GIC(A, model, 0.5)
+result2 <- GIC(G, model, 0.5)
 result2
 }
 \references{
@@ -104,5 +113,10 @@ Silverman, B. W. (1986) _Density Estimation_.  London: Chapman and Hall.
 
 Sturges, H. A. The Choice of a Class Interval. _J. Am. Statist. Assoc._,
 *21*, 65-66.
+
+Sheather, S. J. and Jones, M. C. (1991). A reliable data-based bandwidth
+selection method for kernel density estimation.
+_Journal of the Royal Statistical Society series B_, 53, 683-690.
+http://www.jstor.org/stable/2345597.
 }
 \keyword{graph_information_criterion}

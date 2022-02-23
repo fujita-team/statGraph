@@ -27,10 +27,13 @@ the probability of the given eigenvalue.
 given the degree and excess degree probability.
 }
 \examples{
+set.seed(42)
 G <- igraph::sample_smallworld(dim = 1, size = 10, nei = 2, p = 0.2)
+
 # Obtain the degree distribution
 deg_prob <- c(igraph::degree_distribution(graph = G, mode = "all"),0.0)
 k_deg <- seq(1,length(deg_prob)) - 1
+
 # Obtain the excess degree distribution
 c <- sum(k_deg * deg_prob)
 q_prob <- c()
@@ -38,11 +41,13 @@ for(k in 0:(length(deg_prob) - 1)){
   aux_q <- (k + 1) * deg_prob[k + 1]/c
   q_prob <- c(q_prob,aux_q)
 }
+
 # Obtain the sorted unique degrees greater than 1
 all_k <- c(1:length(q_prob))
 valid_idx <- q_prob != 0
 q_prob <- q_prob[valid_idx]
 all_k <- all_k[valid_idx]
+
 # Obtain the probability of the eigenvalue 0
 z <- 0 + 0.01*1i
 eigenval_prob <- -Im(fast.eigenvalue.probability(deg_prob,q_prob,all_k,z))

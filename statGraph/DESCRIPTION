@@ -7,9 +7,12 @@ Author: Diogo R. da Costa [aut],
   Suzana S. Santos [aut],
   Eduardo S. Lira [aut],
   Andre Fujita [aut, cre]
+  Florencia G. Leonardi [ctb],
+  Andressa Cerqueira [ctb]  
 Maintainer: Andre Fujita <andrefujita@usp.br>
 Depends: R (>= 3.6.0), stats, graphics
-Imports: igraph, MASS, rARPACK, cluster, foreach, parallel, doParallel
+Imports: igraph, MASS, rARPACK, cluster, foreach, parallel, doParallel,
+        methods
 Description: Contains statistical methods to analyze graphs, such as graph 
       parameter estimation, model selection based on the GIC (Graph Information 
       Criterion), statistical tests to discriminate two or more populations of 
@@ -30,17 +33,19 @@ Encoding: UTF-8
 LazyLoad: yes
 URL: https://www.ime.usp.br/~fujita/software.html
 Authors@R: c(
-    person("Diogo R.", "da Costa", email="diogocost2@gmail.com", role=c("aut")),
-    person("Taiane C.", "Ramos", email="taiane@ime.usp.br", role=c("aut")), 
-    person("Grover E.", "Castro Guzman", email="grover@usp.br", role=c("aut")), 	
-    person("Suzana S.", "Santos", email="suzana@ime.usp.br", role=c("aut")),
-    person("Eduardo S.", "Lira", email="edulira@ime.usp.br", role=c("aut")),
-    person("Andre", "Fujita", email="andrefujita@usp.br", role=c("aut", "cre"))
+    person("Diogo R.", "da Costa",       email="diogocost2@gmail.com", role=c("aut")),
+    person("Taiane C.", "Ramos",         email="taiane@ime.usp.br",    role=c("aut")), 
+    person("Grover E.", "Castro Guzman", email="grover@usp.br",        role=c("aut")), 	
+    person("Suzana S.", "Santos",        email="suzana@ime.usp.br",    role=c("aut")),
+    person("Eduardo S.", "Lira",         email="edulira@ime.usp.br",   role=c("aut")),
+    person("Andre", "Fujita",            email="andrefujita@usp.br",   role=c("aut", "cre")),
+	person("Florencia G.", "Leonardi",   email="florencia@usp.br",     role=c("ctb")),
+	person("Andressa", "Cerqueira",      email="acerqueira@ufscar.br", role=c("ctb"))
     )
-Version: 0.4.1
-Date: 2020-12-14
-RoxygenNote: 7.1.1
+Version: 0.5.1
+Date: 2021-08-14
+RoxygenNote: 7.1.2
 NeedsCompilation: no
-Packaged: 2020-12-16 15:26:00 UTC; diogo
+Packaged: 2022-02-04 15:18:12 UTC; diogo
 Repository: CRAN
-Date/Publication: 2020-12-14 21:40:10 UTC
+Date/Publication: 2021-08-14 21:40:10 UTC
