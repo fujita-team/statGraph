@@ -516,7 +516,7 @@ matchFunction <- function(name){
 #' If no value is passed, then the eigenvalues of G will be computed by
 #' 'graph.param.estimator'.
 #'
-#' @param classic logical. If FALSE parameter is estimated using the fast graph
+#' @param classic logical. If FALSE parameter is estimated using the graph
 #' parameter estimator, where this option works better for large graphs with
 #' 1000 or more nodes. If TRUE (default) parameter is estimated using grid
 #' search.
@@ -611,7 +611,7 @@ graph.param.estimator <- function(
     out <- parameter.estimator.k.regular(A, bandwidth, eigenvalues)
   }
   else if(classic) out <- grid.search.parameter.estimator(A, model, parameters, eps, bandwidth, eigenvalues, spectra)
-  else out <- fast.graph.parameter.estimator(G, model, eps=eps, npoints=npoints, numCores=numCores)
+  else out <- graph.parameter.estimator(G, model, eps=eps, npoints=npoints, numCores=numCores)
 
   method    <- "Graph parameter estimator"
   info     <- "Estimating the parameter that best approximates the model to the observed graph"
@@ -1170,7 +1170,7 @@ KL <- function(f1, f2){
 #'
 #' @param eps (default is 0.01) precision of the grid when 'classic' = TRUE.
 #'
-#' @param classic logical. If FALSE parameter is estimated using the fast graph
+#' @param classic logical. If FALSE parameter is estimated using the graph
 #' parameter estimator, where this option works better for large graphs with
 #' 1000 or more nodes. If TRUE (default) parameter is estimated using grid
 #' search.
@@ -2669,7 +2669,7 @@ SturgesBandwidth <- function(x){
 
 #' Degree-based eigenvalue probability
 #'
-#' \code{fast.eigenvalue.probability} returns the probability of an eigenvalue
+#' \code{eigenvalue.probability} returns the probability of an eigenvalue
 #' given the degree and excess degree probability.
 #'
 #' @param deg_prob The degree probability of the graph.
@@ -2717,11 +2717,11 @@ SturgesBandwidth <- function(x){
 #'
 #' # Obtain the probability of the eigenvalue 0
 #' z <- 0 + 0.01 * 1i
-#' eigenval_prob <- -Im(fast.eigenvalue.probability(deg_prob, q_prob, all_k, z))
+#' eigenval_prob <- -Im(eigenvalue.probability(deg_prob, q_prob, all_k, z))
 #' eigenval_prob
 #'
 #' @export
-fast.eigenvalue.probability <- function(deg_prob, q_prob, all_k, z, n_iter = 5000){
+eigenvalue.probability <- function(deg_prob, q_prob, all_k, z, n_iter = 5000){
   h_z   <- 0 + 0i
   eps <- 1e-7
   all_k_mo <- all_k - 1
@@ -2748,7 +2748,7 @@ fast.eigenvalue.probability <- function(deg_prob, q_prob, all_k, z, n_iter = 500
 
 #' Degree-based spectral density
 #'
-#' \code{fast.spectral.density} returns the degree-based spectral density in
+#' \code{get.spectral.density} returns the degree-based spectral density in
 #' the interval <\code{from},\code{to}> by using npoints discretization points.
 #'
 #' @param G The undirected unweighted graph (igraph type) whose spectral
@@ -2785,11 +2785,11 @@ fast.eigenvalue.probability <- function(deg_prob, q_prob, all_k, z, n_iter = 500
 #' G <- igraph::sample_smallworld(dim=1, size=100, nei=2, p=0.2)
 #'
 #' # Obtain the degree-based spectral density
-#' density_ <- fast.spectral.density(G=G, npoints=80, numCores=1)
+#' density_ <- get.spectral.density(G=G, npoints=80, numCores=1)
 #' density_
 #'
 #' @export
-fast.spectral.density <- function(G, from = NULL, to = NULL, npoints = 2000, numCores = 1){
+get.spectral.density <- function(G, from = NULL, to = NULL, npoints = 2000, numCores = 1){
   graph <- G
   `%dopar%` <- foreach::`%dopar%`
   # Number of vertices
@@ -2826,9 +2826,9 @@ fast.spectral.density <- function(G, from = NULL, to = NULL, npoints = 2000, num
   cl <- parallel::makePSOCKcluster(numCores)
   doParallel::registerDoParallel(cl)
   i <- NULL
-  y <- foreach::foreach(i=1:length(x),.combine = c,.export = c("fast.eigenvalue.probability")) %dopar% {
+  y <- foreach::foreach(i=1:length(x),.combine = c,.export = c("eigenvalue.probability")) %dopar% {
     z <- x[i] + 0.01*1i
-    -Im(fast.eigenvalue.probability(deg_prob, q_prob, all_k, z))
+    -Im(eigenvalue.probability(deg_prob, q_prob, all_k, z))
   }
 
   # close cluster
@@ -2845,7 +2845,7 @@ fast.spectral.density <- function(G, from = NULL, to = NULL, npoints = 2000, num
 
 #' Degree-based graph parameter estimator
 #'
-#' \code{fast.graph.parameter.estimator} estimates the parameter of the complex
+#' \code{graph.parameter.estimator} estimates the parameter of the complex
 #' network model using the degree-based spectral density and ternary search.
 #'
 #' @param G The undirected unweighted graph (igraph type).
@@ -2905,7 +2905,7 @@ fast.spectral.density <- function(G, from = NULL, to = NULL, npoints = 2000, num
 #' G <- igraph::sample_smallworld(dim=1, size=15, nei=2, p=0.2)
 #'
 #' # Obtain the parameter of the WS model
-#' estimated.parameter1 <- fast.graph.parameter.estimator(G, "WS", lo=0.1, hi=0.5, eps=1e-1, npoints=10, numCores=1)
+#' estimated.parameter1 <- graph.parameter.estimator(G, "WS", lo=0.1, hi=0.5, eps=1e-1, npoints=10, numCores=1)
 #' estimated.parameter1
 #'
 #' \dontrun{
@@ -2919,12 +2919,12 @@ fast.spectral.density <- function(G, from = NULL, to = NULL, npoints = 2000, num
 #' }
 #'
 #' # Obtain the parameter of the WS model
-#' estimated.parameter2 <- fast.graph.parameter.estimator(G, fun_WS, lo=0.0, hi=1.0, npoints=100, numCores=2)
+#' estimated.parameter2 <- graph.parameter.estimator(G, fun_WS, lo=0.0, hi=1.0, npoints=100, numCores=2)
 #' estimated.parameter2
 #' }
 #'
 #' @export
-fast.graph.parameter.estimator <- function(G, model, lo = NULL, hi = NULL, eps = 1e-3, from = NULL, to = NULL,
+graph.parameter.estimator <- function(G, model, lo = NULL, hi = NULL, eps = 1e-3, from = NULL, to = NULL,
                                            npoints = 2000, numCores = 1){
 
   # When the model is a function then check if the smallest and largest value 
@@ -2971,7 +2971,7 @@ fast.graph.parameter.estimator <- function(G, model, lo = NULL, hi = NULL, eps =
   # Obtain the number of vertices of the graph
   n <- igraph::vcount(G)
   # Obtain density function of the observed graph
-  observed_graph_density <- fast.spectral.density(G, from=from, to=to, npoints=npoints, numCores=numCores)
+  observed_graph_density <- get.spectral.density(G, from=from, to=to, npoints=npoints, numCores=numCores)
   # Make ternary search
   dist_to_1 <- NULL
   dist_to_2 <- NULL
@@ -2984,7 +2984,7 @@ fast.graph.parameter.estimator <- function(G, model, lo = NULL, hi = NULL, eps =
     } else {
       Graph1 <- fun(n, mid1, as_matrix=FALSE)
     }
-    density1 <- fast.spectral.density(Graph1, from=from, to=to, npoints=npoints, numCores=numCores)
+    density1 <- get.spectral.density(Graph1, from=from, to=to, npoints=npoints, numCores=numCores)
     # Free memory allocated by Graph1
     rm(Graph1)
     # Generate graph using parameter mid2
@@ -2993,7 +2993,7 @@ fast.graph.parameter.estimator <- function(G, model, lo = NULL, hi = NULL, eps =
     } else {
       Graph2 <- fun(n, mid2, as_matrix=FALSE)
     }
-    density2 <- fast.spectral.density(Graph2, from=from, to=to, npoints=npoints, numCores=numCores)
+    density2 <- get.spectral.density(Graph2, from=from, to=to, npoints=npoints, numCores=numCores)
     # Free memory allocated by Graph2
     rm(Graph2)
     # Reduce the interval search
