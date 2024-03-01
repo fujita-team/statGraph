@@ -1,0 +1,44 @@
+
+R version 4.3.2 (2023-10-31) -- "Eye Holes"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "statGraph"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('statGraph')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("GIC")
+> ### * GIC
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: GIC
+> ### Title: Graph Information Criterion (GIC)
+> ### Aliases: GIC
+> ### Keywords: graph_information_criterion
+> 
+> ### ** Examples
+> 
+> A <- as.matrix(igraph::get.adjacency(igraph::sample_gnp(n=50, p=0.5)))
+> # Using a string to indicate the graph model
+> result1 <- GIC(A, "ER", 0.5)
+Error in GIC(A, "ER", 0.5) : The input should be an igraph object!
+Execution halted

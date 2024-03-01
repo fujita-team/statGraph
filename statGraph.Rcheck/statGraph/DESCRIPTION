@@ -1,0 +1,39 @@
+Package: statGraph
+Type: Package
+Title: Statistical Methods for Graphs
+Version: 0.6.0
+Authors@R: c(
+    person("Grover E.", "Castro Guzman", email="grover@usp.br", role=c("aut")), 
+    person("Diogo R.", "da Costa", email="diogocost2@gmail.com", role=c("aut")),
+    person("Taiane C.", "Ramos", email="taiane@ime.usp.br", role=c("aut")), 	
+    person("Suzana S.", "Santos", email="suzana@ime.usp.br", role=c("aut")),
+    person("Eduardo S.", "Lira", email="edulira@ime.usp.br", role=c("aut")),
+    person("Andre", "Fujita", email="andrefujita@usp.br", role=c("aut", "cre")))
+Maintainer: Andre Fujita <andrefujita@usp.br>
+Depends: R (>= 4.3.0), stats, graphics
+Imports: igraph, MASS, rARPACK, cluster, foreach, parallel, doParallel,
+        methods
+Description: Contains statistical methods to analyze graphs, such as graph parameter estimation, 
+    model selection based on the Graph Information Criterion, statistical tests to discriminate two or more populations of graphs, 
+    correlation between graphs, and clustering of graphs.
+    References: Takahashi et al. (2012) <doi:10.1371/journal.pone.0049949>, Fujita et al. (2017) <doi:10.3389/fnins.2017.00066>,
+    Fujita et al. (2017) <doi:10.1016/j.csda.2016.11.016>, Tang et al. (2017) <doi:10.3150/15-BEJ789>,
+    Tang et al. (2017) <doi:10.1080/10618600.2016.1193505>, Ghoshdastidar et al. (2017) <arXiv:1705.06168>,
+    Ghoshdastidar et al. (2017) <arXiv:1707.00833>, Cerqueira et al. (2017) <doi:10.1109/TNSE.2017.2674026>,
+    Fraiman and Fraiman (2018) <doi:10.1038/s41598-018-23152-5>, Fujita et al. (2019) <doi:10.1093/comnet/cnz028>.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyLoad: yes
+URL: https://www.ime.usp.br/~fujita/software.html
+Date: 2024-03-01
+NeedsCompilation: no
+RoxygenNote: 7.3.1
+Repository: CRAN
+Packaged: 2024-03-01 20:21:35 UTC; grover
+Author: Grover E. Castro Guzman [aut],
+  Diogo R. da Costa [aut],
+  Taiane C. Ramos [aut],
+  Suzana S. Santos [aut],
+  Eduardo S. Lira [aut],
+  Andre Fujita [aut, cre]
+Built: R 4.3.2; ; 2024-03-01 20:21:48 UTC; unix
