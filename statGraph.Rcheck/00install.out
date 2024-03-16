@@ -1,7 +1,6 @@
 * installing *source* package ‘statGraph’ ...
 ** using staged installation
 ** R
-** inst
 ** byte-compile and prepare package for lazy loading
 ** help
 *** installing help indices

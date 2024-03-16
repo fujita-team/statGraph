@@ -29,11 +29,11 @@ Date: 2024-03-01
 NeedsCompilation: no
 RoxygenNote: 7.3.1
 Repository: CRAN
-Packaged: 2024-03-01 20:21:35 UTC; grover
+Packaged: 2024-03-01 20:24:17 UTC; grover
 Author: Grover E. Castro Guzman [aut],
   Diogo R. da Costa [aut],
   Taiane C. Ramos [aut],
   Suzana S. Santos [aut],
   Eduardo S. Lira [aut],
   Andre Fujita [aut, cre]
-Built: R 4.3.2; ; 2024-03-01 20:21:48 UTC; unix
+Built: R 4.3.2; ; 2024-03-01 20:24:35 UTC; unix

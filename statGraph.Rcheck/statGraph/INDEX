@@ -1,35 +1,27 @@
 GIC                     Graph Information Criterion (GIC)
 anogva                  ANOGVA Analysis Of Graph Variability
-cerqueira               Andressa Cerqueira, Daniel Fraiman, Claudia D.
-                        Vargas and Florencia Leonardi non-parametric
-                        test of hypotheses to verify if two samples of
-                        random graphs were originated from the same
-                        probability distribution.
-fast.eigenvalue.probability
-                        Degree-based eigenvalue probability
-fast.graph.param.estimator
-                        Degree-based graph parameter estimator
-fast.spectral.density   Degree-based spectral density
-fraiman                 Daniel Fraiman and Ricardo Fraiman test for
-                        network differences between groups with an
-                        analysis of variance test (ANOVA).
-gCEM                    Clustering Expectation-Maximization for Graphs
-                        (gCEM)
-ghoshdastidar           Ghoshdastidar hypothesis testing for large
-                        random graphs.
 graph.acf               Auto Correlation Function Estimation for Graphs
-graph.cluster           Hierarchical cluster analysis on a list of
+graph.cem               Clustering Expectation-Maximization for Graphs
+                        (graph.cem)
+graph.cerqueira.test    Cerqueira's hypothesis testing for random
                         graphs.
 graph.cor.test          Test for Association / Correlation Between
                         Paired Samples of Graphs
 graph.entropy           Graph spectral entropy
+graph.fraiman.test      Fraiman's hypothesis testing for random graphs.
+graph.ghoshdastidar.test
+                        Ghoshdastidar hypothesis testing for large
+                        random graphs.
+graph.hclust            Hierarchical cluster analysis on a list of
+                        graphs.
+graph.kmeans            K-means for Graphs
 graph.model.selection   Graph model selection
 graph.mult.scaling      Multidimensional scaling of graphs
 graph.param.estimator   Graph parameter estimator
-graph.test              Test for the Jensen-Shannon divergence between
+graph.spectral.density
+                        Graph spectral density
+graph.takahashi.test    Test for the Jensen-Shannon divergence between
                         graphs
-kmeans.graph            K-means for Graphs
+graph.tang.test         Tang hypothesis testing for random graphs.
 sp.anogva               Semi-Parametric Analysis Of Graph Variability
                         (ANOGVA)
-statGraph-package       Statistical Methods for Graphs
-tang                    Tang hypothesis testing for random graphs.
