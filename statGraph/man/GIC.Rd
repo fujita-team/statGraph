@@ -16,13 +16,13 @@ compute its spectral density.}
 graph model:
 
 A list that represents the spectral density of a model. It contains the
-components "x" and "y", which are numeric vectors of the same size. The "x"
-component contains the points at which the density was computed and the "y"
+components 'x' and 'y', which are numeric vectors of the same size. The 'x'
+component contains the points at which the density was computed and the 'y'
 component contains the observed density.
 
-A string that indicates one of the following models: "ER" (Erdos-Renyi random
-graph), "GRG" (geometric random graph), "KR" (k regular random graph), "WS"
-(Watts-Strogatz model), and "BA" (Barabási-Albert model). When the argument
+A string that indicates one of the following models: 'ER' (Erdos-Renyi random
+graph), 'GRG' (geometric random graph), 'KR' (k regular random graph), 'WS'
+(Watts-Strogatz model), and 'BA' (Barabási-Albert model). When the argument
 \code{model} is a string, the user must also provide the model parameter by using
 the argument \code{p}.
 
@@ -34,35 +34,33 @@ function.}
 
 \item{p}{the model parameter. The user must provide a valid parameter if the
 argument \code{model} is a string or a function.
-For the predefined models ("ER", "GRG", "KR", "WS", and "BA"), the parameter
-the probability to connect a pair of vertices, for the "ER" model
+For the predefined models ('ER', 'GRG', 'KR', 'WS', and 'BA'), the parameter
+the probability to connect a pair of vertices, for the 'ER' model
 (Erdos-Renyi random graph);
 
 the radius used to construct the geometric graph in a unit square, for the
-"GRG" model (geometric random graph);
+'GRG' model (geometric random graph);
 
-the degree \code{k} of a regular graph, for the "KR" model (k regular random
+the degree \code{k} of a regular graph, for the 'KR' model (k regular random
 graph);
 
-the probability to reconnect a vertex, for the "WS" model (Watts-Strogatz
+the probability to reconnect a vertex, for the 'WS' model (Watts-Strogatz
 model);
 
-and the scaling exponent, for the "BA" model (Barabási-Albert model).}
+and the scaling exponent, for the 'BA' model (Barabási-Albert model).}
 
-\item{dist}{string indicating if you want to use the "KL" (default), "L1" or "L2"
-distances. "KL" means Kullback-Leibler divergence.}
+\item{dist}{string indicating if you want to use the 'KL' (default), 'L1' or 'L2'
+distances. 'KL' means Kullback-Leibler divergence.}
 
 \item{...}{Other relevant parameters for \code{\link{graph.spectral.density}}.}
 }
 \value{
-A list with class "statGraph" containing the following components:
-\itemize{
+A list with class 'statGraph' containing the following components:
 \item{\code{method:}}{ a string indicating the used method.}
 \item{\code{info:}}{ a string showing details about the method.}
 \item{\code{data.name:}}{ a string with the data's name(s).}
 \item{\code{value:}}{ a real number corresponding to the Kullback-Leibler divergence, L1, or
  L2 distance between the observed graph and the graph model.}
-}
 }
 \description{
 \code{GIC} returns the Kullback-Leibler divergence, L1 or L2 distance between an
@@ -73,7 +71,7 @@ set.seed(1)
 G <- igraph::sample_gnp(n=50, p=0.5)
 
 # Using a string to indicate the graph model
-result1 <- GIC(G, "ER", 0.5)
+result1 <- GIC(G, 'ER', 0.5)
 result1
 
 # Using a function to describe the graph model

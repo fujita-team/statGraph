@@ -12,13 +12,13 @@
 #' graph model:
 #'
 #' A list that represents the spectral density of a model. It contains the
-#' components "x" and "y", which are numeric vectors of the same size. The "x"
-#' component contains the points at which the density was computed and the "y"
+#' components 'x' and 'y', which are numeric vectors of the same size. The 'x'
+#' component contains the points at which the density was computed and the 'y'
 #' component contains the observed density.
 #'
-#' A string that indicates one of the following models: "ER" (Erdos-Renyi random
-#' graph), "GRG" (geometric random graph), "KR" (k regular random graph), "WS"
-#' (Watts-Strogatz model), and "BA" (Barabási-Albert model). When the argument
+#' A string that indicates one of the following models: 'ER' (Erdos-Renyi random
+#' graph), 'GRG' (geometric random graph), 'KR' (k regular random graph), 'WS'
+#' (Watts-Strogatz model), and 'BA' (Barabási-Albert model). When the argument
 #' \code{model} is a string, the user must also provide the model parameter by using
 #' the argument \code{p}.
 #'
@@ -30,36 +30,33 @@
 #'
 #' @param p the model parameter. The user must provide a valid parameter if the
 #' argument \code{model} is a string or a function.
-#' For the predefined models ("ER", "GRG", "KR", "WS", and "BA"), the parameter
+#' For the predefined models ('ER', 'GRG', 'KR', 'WS', and 'BA'), the parameter
 # \code{p} corresponds to:
-#
-#' the probability to connect a pair of vertices, for the "ER" model
+#' the probability to connect a pair of vertices, for the 'ER' model
 #' (Erdos-Renyi random graph);
 #'
 #' the radius used to construct the geometric graph in a unit square, for the
-#' "GRG" model (geometric random graph);
+#' 'GRG' model (geometric random graph);
 #'
-#' the degree \code{k} of a regular graph, for the "KR" model (k regular random
+#' the degree \code{k} of a regular graph, for the 'KR' model (k regular random
 #' graph);
 #'
-#' the probability to reconnect a vertex, for the "WS" model (Watts-Strogatz
+#' the probability to reconnect a vertex, for the 'WS' model (Watts-Strogatz
 #' model);
 #'
-#' and the scaling exponent, for the "BA" model (Barabási-Albert model).
+#' and the scaling exponent, for the 'BA' model (Barabási-Albert model).
 #'
-#' @param dist string indicating if you want to use the "KL" (default), "L1" or "L2"
-#' distances. "KL" means Kullback-Leibler divergence.
+#' @param dist string indicating if you want to use the 'KL' (default), 'L1' or 'L2'
+#' distances. 'KL' means Kullback-Leibler divergence.
 #'
 #' @param ... Other relevant parameters for \code{\link{graph.spectral.density}}.
 #'
-#' @return A list with class "statGraph" containing the following components:
-#' \itemize{
+#' @return A list with class 'statGraph' containing the following components:
 #' \item{\code{method:}}{ a string indicating the used method.}
 #' \item{\code{info:}}{ a string showing details about the method.}
 #' \item{\code{data.name:}}{ a string with the data's name(s).}
 #' \item{\code{value:}}{ a real number corresponding to the Kullback-Leibler divergence, L1, or
 #'  L2 distance between the observed graph and the graph model.}
-#' }
 #'
 #' @keywords graph_information_criterion
 #'
@@ -84,7 +81,7 @@
 #' G <- igraph::sample_gnp(n=50, p=0.5)
 #'
 #' # Using a string to indicate the graph model
-#' result1 <- GIC(G, "ER", 0.5)
+#' result1 <- GIC(G, 'ER', 0.5)
 #' result1
 #'
 #' # Using a function to describe the graph model
@@ -97,32 +94,34 @@
 #'
 #' @import methods
 #' @export
-GIC <- function(Graph, model, p=NULL, dist = "KL", ...) {
-  if(!valid.input(Graph)){
-    stop("The input should be an igraph object!")
-  }
-  data.name <- deparse(substitute(Graph))
+GIC <- function(Graph, model, p = NULL, dist = "KL", ...) {
+    if (!valid.input(Graph)) {
+        stop("The input should be an igraph object!")
+    }
+    data.name <- deparse(substitute(Graph))
 
-  n = igraph::vcount(Graph)
-  avg_deg = as.integer(mean(igraph::degree(Graph)))
-  graph_den <- Graph$density
-  model_den <- NULL
-  if(is.null(graph_den)){
-    model_den <- graph.model.spectral.density(model = model,n = n,p = p,mean_deg = avg_deg,...)
-    graph_den <- graph.spectral.density(Graph,from = model_den$from,to = model_den$to,...)
-  } else {
-    model_den <- graph.model.spectral.density(model,n= n,p = p,mean_deg = avg_deg,from = graph_den$from,to = graph_den$to,...)
-  }
-  #
-  if (sum(is.na(model_den)) > 0)
-    return(Inf)
-  if (sum(is.na(graph_den)) > 0)
-    return(Inf)
-  #
-  out <- distance(graph_den,model_den,dist=dist)
-  ###
-  method_info <- "Graph Information criterion"
-  output <- list(method = method_info, info = graph_den$info, data.name = data.name, value = out,dist = "dist")
-  class_obj <- new("statGraph",output)
-  return(class_obj)
+    n <- igraph::vcount(Graph)
+    m <- igraph::ecount(Graph)
+    avg_deg <- as.integer(ceiling(m/n))
+
+    graph_den <- Graph$density
+    model_den <- NULL
+    if (is.null(graph_den)) {
+        model_den <- graph.model.spectral.density(model = model, n = n, p = p, mean_deg = avg_deg, ...)
+        graph_den <- graph.spectral.density(Graph, from = model_den$from, to = model_den$to, ...)
+    } else {
+        model_den <- graph.model.spectral.density(model, n = n, p = p, mean_deg = avg_deg, from = graph_den$from, to = graph_den$to, ...)
+    }
+    #
+    if (sum(is.na(model_den)) > 0)
+        return(Inf)
+    if (sum(is.na(graph_den)) > 0)
+        return(Inf)
+    #
+    out <- distance(graph_den, model_den, dist = dist)
+    ###
+    method_info <- "Graph Information Criterion"
+    output <- list(method = method_info, info = graph_den$info, data.name = data.name, value = out, dist = dist)
+    class(output) <- "statGraph"
+    return(output)
 }

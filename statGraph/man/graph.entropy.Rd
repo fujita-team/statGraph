@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.entropy.R
 \name{graph.entropy}
 \alias{graph.entropy}
-\title{Graph spectral entropy}
+\title{Graph Spectral Entropy}
 \usage{
 graph.entropy(Graph, ...)
 }
@@ -15,13 +15,11 @@ compute its spectral density.}
 \item{...}{Other relevant parameters for \code{\link{graph.spectral.density}}.}
 }
 \value{
-A list with class "statGraph" containing the following components:
-\itemize{
+A list with class 'statGraph' containing the following components:
 \item{\code{method:}}{ a string indicating the used method.}
 \item{\code{info:}}{ a string showing details about the method.}
 \item{\code{data.name:}}{ a string with the data's name(s).}
 \item{\code{entropy:}}{ a real number corresponding to the graph spectral entropy.}
-}
 }
 \description{
 \code{graph.entropy} returns the spectral entropy of an undirected graph.

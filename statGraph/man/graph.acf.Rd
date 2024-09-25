@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.acf.R
 \name{graph.acf}
 \alias{graph.acf}
-\title{Auto Correlation Function Estimation for Graphs}
+\title{Autocorrelation Function Estimation for Graphs}
 \usage{
 graph.acf(Graphs, plot = TRUE)
 }

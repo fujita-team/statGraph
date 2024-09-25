@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.mult.scaling.R
 \name{graph.mult.scaling}
 \alias{graph.mult.scaling}
-\title{Multidimensional scaling of graphs}
+\title{Multidimensional Scaling of Graphs}
 \usage{
 graph.mult.scaling(
   Graphs,
@@ -22,20 +22,19 @@ compute their spectral density.}
 \item{plot}{logical. If \code{TRUE} (default) the points chosen to represent the
 Jensen-Shannon divergence between graphs are plotted.}
 
-\item{type}{what type of plot should be drawn. The default value is \code{"n"},
+\item{type}{what type of plot should be drawn. The default value is \code{'n'},
 which indicates that the points will not be plotted (i. e. only the labels
 of the graphs will be plotted).}
 
-\item{dist}{string indicating if you want to use the "JS" (default), "L1" or "L2"
-distances. "JS" means Jensen-Shannon divergence.}
+\item{dist}{string indicating if you want to use the 'JS' (default), 'L1' or 'L2'
+distances. 'JS' means Jensen-Shannon divergence.}
 
-\item{main}{title of the plot (default value is "").}
+\item{main}{title of the plot (default value is '').}
 
 \item{...}{additional parameters for \code{\link{graph.spectral.density}}.}
 }
 \value{
-A list with class "statGraph" containing the following components:
-\itemize{
+A list with class 'statGraph' containing the following components:
 \item{\code{method:}}{ a string indicating the used method.}
 \item{\code{info:}}{ a string showing details about the method.}
 \item{\code{data.name:}}{ a string with the data's name(s).}
@@ -43,7 +42,6 @@ A list with class "statGraph" containing the following components:
 row corresponds to a graph (point). Then, each row gives the coordinates of
 the points chosen to represent the Jensen-Shannon divergence (by default), L1, or
 L2 distance between graphs.}
-}
 }
 \description{
 \code{graph.mult.scaling} performs multidimensional scaling of graphs. It

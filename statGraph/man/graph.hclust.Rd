@@ -2,9 +2,9 @@
 % Please edit documentation in R/graph.hclust.R
 \name{graph.hclust}
 \alias{graph.hclust}
-\title{Hierarchical cluster analysis on a list of graphs.}
+\title{Hierarchical Cluster Analysis on a List of Graphs}
 \usage{
-graph.hclust(Graphs, k, clus_method = "complete", dist = "JS", ...)
+graph.hclust(Graphs, k = NULL, clus_method = "complete", dist = "JS", ...)
 }
 \arguments{
 \item{Graphs}{a list of undirected graphs.
@@ -12,25 +12,26 @@ If each graph has the  attribute \code{eigenvalues} containing its
 eigenvalues , such values will be used to
 compute their spectral density.}
 
-\item{k}{the number of clusters.}
+\item{k}{the number of clusters. If NULL, it won't return the computed clustering.}
 
 \item{clus_method}{the agglomeration method to be used. This should be (an
-unambiguous abbreviation of) one of '"ward.D"', '"ward.D2"', '"single"',
-'"complete"', '"average"' (= UPGMA), '"mcquitty"' (= WPGMA), '"median"'
-(= WPGMC) or '"centroid"' (= UPGMC).}
+unambiguous abbreviation of) one of ''ward.D'', ''ward.D2'', ''single'',
+''complete'', ''average'' (= UPGMA), ''mcquitty'' (= WPGMA), ''median''
+(= WPGMC) or ''centroid'' (= UPGMC).}
 
-\item{dist}{string indicating if you want to use the "JS" (default), "L1" or "L2"
-distances. "JS" means Jensen-Shannon divergence.}
+\item{dist}{string indicating if you want to use the 'JS' (default), 'L1' or 'L2'
+distances. 'JS' means Jensen-Shannon divergence.}
 
 \item{...}{Other relevant parameters for \code{\link{graph.spectral.density}}.}
 }
 \value{
-A list containing:
-\itemize{
-\item{\code{hclust:}}{ an object of class \code{hclust} which describes the tree produced
-by the clustering process.}
-\item{\code{cluster:}}{ the clustering labels for each graph.}
-}
+A list with class 'statGraph' containing the following components:
+\item{\code{method:}}{ a string indicating the used method.}
+\item{\code{info:}}{ a string showing details about the method.}
+\item{\code{data.name:}}{ a string with the data's name(s).}
+\item{\code{cluster:}}{ a vector of the same length of \code{Graphs} containing the clusterization
+labels.}
+\item{\code{hclust:}}{ a 'hclust' object.}
 }
 \description{
 Given a list of graphs, \code{graph.hclust} builds a hierarchy of clusters

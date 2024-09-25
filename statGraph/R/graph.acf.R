@@ -1,4 +1,4 @@
-#' Auto Correlation Function Estimation for Graphs
+#' Autocorrelation Function Estimation for Graphs
 #'
 #' The function \code{graph.acf} computes estimates of the autocorrelation
 #' function for graphs.
@@ -36,10 +36,14 @@
 #' graph.acf(G, plot=TRUE)
 #'
 #' @export
-graph.acf <- function(Graphs, plot=TRUE) {
-  if(!valid.input(Graphs)) stop("The input should be a list of igraph objects!")
+graph.acf <- function(Graphs, plot = TRUE) {
+    if (!valid.input(Graphs, level = 1)) {
+        stop("The input should be a list of igraph objects!")
+    }
 
-  G.radius <- unlist(Map(f = function(G) { get.largest.eigenvalue(G) },Graphs))
-  res <- acf(G.radius, plot=plot)
-  return(res)
+    G.radius <- unlist(Map(f = function(G) {
+        get.largest.eigenvalue(G)
+    }, Graphs))
+    res <- acf(G.radius, plot = plot)
+    return(res)
 }

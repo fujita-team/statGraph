@@ -1,4 +1,4 @@
-#' Hierarchical cluster analysis on a list of graphs.
+#' Hierarchical Cluster Analysis on a List of Graphs
 #'
 #' Given a list of graphs, \code{graph.hclust} builds a hierarchy of clusters
 #' according to the Jensen-Shannon divergence between graphs.
@@ -8,25 +8,25 @@
 #' eigenvalues , such values will be used to
 #' compute their spectral density.
 #'
-#' @param k the number of clusters.
+#' @param k the number of clusters. If NULL, it won't return the computed clustering.
 #'
 #' @param clus_method the agglomeration method to be used. This should be (an
-#' unambiguous abbreviation of) one of '"ward.D"', '"ward.D2"', '"single"',
-#' '"complete"', '"average"' (= UPGMA), '"mcquitty"' (= WPGMA), '"median"'
-#' (= WPGMC) or '"centroid"' (= UPGMC).
+#' unambiguous abbreviation of) one of ''ward.D'', ''ward.D2'', ''single'',
+#' ''complete'', ''average'' (= UPGMA), ''mcquitty'' (= WPGMA), ''median''
+#' (= WPGMC) or ''centroid'' (= UPGMC).
 #'
-#' @param dist string indicating if you want to use the "JS" (default), "L1" or "L2"
-#' distances. "JS" means Jensen-Shannon divergence.
+#' @param dist string indicating if you want to use the 'JS' (default), 'L1' or 'L2'
+#' distances. 'JS' means Jensen-Shannon divergence.
 #'
 #' @param ... Other relevant parameters for \code{\link{graph.spectral.density}}.
 #'
-#'
-#' @return A list containing:
-#' \itemize{
-#' \item{\code{hclust:}}{ an object of class \code{hclust} which describes the tree produced
-#' by the clustering process.}
-#' \item{\code{cluster:}}{ the clustering labels for each graph.}
-#' }
+#' @return A list with class 'statGraph' containing the following components:
+#' \item{\code{method:}}{ a string indicating the used method.}
+#' \item{\code{info:}}{ a string showing details about the method.}
+#' \item{\code{data.name:}}{ a string with the data's name(s).}
+#' \item{\code{cluster:}}{ a vector of the same length of \code{Graphs} containing the clusterization
+#' labels.}
+#' \item{\code{hclust:}}{ a 'hclust' object.}
 #'
 #'
 #' @keywords clustering
@@ -64,19 +64,27 @@
 #' @import stats
 #' @import methods
 #' @export
-graph.hclust <- function(Graphs, k, clus_method="complete", dist = "JS", ...) {
+graph.hclust <- function(Graphs, k = NULL, clus_method = "complete", dist = "JS", ...) {
 
-  if(!valid.input(Graphs)) stop("The input should be a list of igraph objects!")
+    if (!valid.input(Graphs, level = 1)){
+        stop("The input should be a list of igraph objects!")
+    }
+    data.name <- deparse(substitute(Graphs))
+    Graphs <- set.list.spectral.density(Graphs, ...)
 
-  Graphs <- set.list.spectral.density(Graphs,...)
+    d <- graph.dist(Graphs, dist = dist)
 
-  d <- graph.dist(Graphs,dist = dist)
+    tmp <- hclust(as.dist(d), method = clus_method)
 
-  tmp <- hclust(d, method=clus_method)
-
-  res <- list()
-  res$hclust <- tmp
-  res$cluster <- cutree(tmp, k)
-
-  return(res)
+    cluster <- NULL
+    if (!is.null(k)) {
+        cluster <- cutree(tmp, k)
+    }
+    #
+    method_info <- "Hierarchical Clustering for Graphs"
+    info <- "Clustering the graphs following a hierarchical clustering algorithm"
+    output <- list(method = method_info, info = info, data.name = data.name, cluster = cluster, hclust = tmp)
+    #
+    class(output) <- "statGraph"
+    return(output)
 }

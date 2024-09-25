@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.dist.R
 \name{graph.dist}
 \alias{graph.dist}
-\title{Distance matrix on a list of graphs.}
+\title{Distance Matrix on a List of Graphs}
 \usage{
 graph.dist(Graphs, dist = "JS", ...)
 }
@@ -12,8 +12,8 @@ If each graph has the  attribute \code{eigenvalues} containing its
 eigenvalues , such values will be used to
 compute their spectral density.}
 
-\item{dist}{string indicating if you want to use the "JS" (default), "L1" or "L2"
-distances. "JS" means Jensen-Shannon divergence.}
+\item{dist}{string indicating if you want to use the 'JS' (default), 'L1' or 'L2'
+distances. 'JS' means Jensen-Shannon divergence.}
 
 \item{...}{Other relevant parameters for \code{\link{graph.spectral.density}}.}
 }
@@ -27,11 +27,18 @@ between the spectral density of the graphs graphs.
 }
 \examples{
 set.seed(1)
-G <- list()
-for (i in 1:5) {
-  G[[i]] <- igraph::sample_gnp(50, 0.5)
+g <- list()
+for(i in 1:5){
+  g[[i]] <- igraph::sample_gnp(n=50, p=0.1)
 }
-graph.dist(G, 3)
+for(i in 6:10){
+  g[[i]] <- igraph::sample_gnp(n=50, p=0.5)
+}
+for(i in 11:15){
+ g[[i]] <- igraph::sample_gnp(n=50, p=0.9)
+}
+graph.dist(g, dist = 'JS')
+
 
 }
 \keyword{distance_matrix}

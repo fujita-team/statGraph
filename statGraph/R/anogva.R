@@ -1,4 +1,4 @@
-#' ANOGVA Analysis Of Graph Variability
+#' Analysis Of Graph Variability (ANOGVA)
 #'
 #' \code{anogva} statistically tests whether two or more sets of graphs are generated
 #' by the same random graph model. It is a generalization of the \code{takahashi.test}
@@ -13,18 +13,16 @@
 #'
 #' @param maxBoot integer indicating the number of bootstrap resamplings (default \code{1000}).
 #'
-#' @param dist string indicating if you want to use the "KL" (default), "JS" , "L1" or "L2"
-#' distances. "KL" means Kullback-Leibler divergence. "JS" means Jensen-Shannon divergence.
+#' @param dist string indicating if you want to use the 'KL' (default), 'JS' , 'L1' or 'L2'
+#' distances. 'KL' means Kullback-Leibler divergence. 'JS' means Jensen-Shannon divergence.
 #'
 #' @param ... Other relevant parameters for \code{\link{graph.spectral.density}}.
 #'
-#' @return A list with class "htest" containing the following components:
-#' \itemize{
+#' @return A list with class 'htest' containing the following components:
 #' \item{\code{statistic:}}{ the statistic of the test.}
 #' \item{\code{p.value:}}{ the p-value of the test.}
 #' \item{\code{method:}}{ a string indicating the used method.}
 #' \item{\code{data.name:}}{a string with the data's name(s).}
-#' }
 #'
 #' @keywords analysis_of_graph_variability
 #'
@@ -63,53 +61,56 @@
 #' result
 #'
 #' @export
-anogva <- function(Graphs, labels, maxBoot=1000, dist = "KL",...) {
-  if(!valid.input(Graphs)) stop("The input should be a list of igraph objects!")
-  data.name <- deparse(substitute(Graphs))
-  # compute the spectral densities of the graphs and store in the density attribute
-  Graphs <- set.list.spectral.density(Graphs,...)
-  # list of means for each diff label
-  group_mean_den <- list()
-  # recover unique labels
-  ulabels = unique(labels)
-  for(label in ulabels){
-    group_mean_den[[label]] <- get.mean.spectral.density(Graphs[labels == label])
-  }
-  # compute mean of means
-  all_mean_den <- Graphs[[1]]$density
-  all_mean_den$y <- Reduce(f="+",Map(f=function(d) {d$y},group_mean_den))/length(ulabels)
-
-  distOrig <- 0
-  for(label in ulabels) {
-    distOrig <- distOrig + distance(group_mean_den[[label]], all_mean_den,dist = dist)
-  }
-  distOrig <- distOrig / length(ulabels)
-
-  ## Permutation test
-  distBoot <- array(0, maxBoot)
-
-  for (boot in 1:maxBoot) {
-    sample_labels <- sample(labels, length(labels), replace=FALSE)
-
-    sample_group_mean_den <- list()
+anogva <- function(Graphs, labels, maxBoot = 1000, dist = "KL", ...) {
+    if (!valid.input(Graphs, level = 1)) {
+        stop("The input should be a list of igraph objects!")
+    }
+    data.name <- deparse(substitute(Graphs))
+    # compute the spectral densities of the graphs and store in the density attribute
+    Graphs <- set.list.spectral.density(Graphs, ...)
+    # list of means for each diff label
+    group_mean_den <- list()
     # recover unique labels
-    for(label in ulabels){
-      sample_group_mean_den[[label]] <- get.mean.spectral.density(Graphs[sample_labels == label])
+    ulabels = unique(labels)
+    for (label in ulabels) {
+        group_mean_den[[label]] <- get.mean.spectral.density(Graphs[labels == label])
+    }
+    # compute mean of means
+    all_mean_den <- Graphs[[1]]$density
+    all_mean_den$y <- Reduce(f = "+", Map(f = function(d) {
+        d$y
+    }, group_mean_den))/length(ulabels)
+
+    distOrig <- 0
+    for (label in ulabels) {
+        distOrig <- distOrig + distance(group_mean_den[[label]], all_mean_den, dist = dist)
+    }
+    distOrig <- distOrig/length(ulabels)
+
+    ## Permutation test
+    distBoot <- array(0, maxBoot)
+
+    for (boot in 1:maxBoot) {
+        sample_labels <- sample(labels, length(labels), replace = FALSE)
+
+        sample_group_mean_den <- list()
+        # recover unique labels
+        for (label in ulabels) {
+            sample_group_mean_den[[label]] <- get.mean.spectral.density(Graphs[sample_labels == label])
+        }
+
+        for (label in ulabels) {
+            distBoot[boot] <- distBoot[boot] + distance(sample_group_mean_den[[label]], all_mean_den, dist = dist)
+        }
     }
 
-    for(label in ulabels) {
-      distBoot[boot] <- distBoot[boot] + distance(sample_group_mean_den[[label]], all_mean_den,dist = dist)
-    }
-  }
+    pvalue <- length(which(distBoot >= distOrig))/(maxBoot + 1)
+    ###
+    statistic <- distOrig
+    names(statistic) <- "statistic"
+    method_info <- paste0("Analysis of Graph Variability with\n       simulated p-value (based on ", maxBoot, " replicates)")
+    rval <- list(statistic = statistic, p.value = pvalue, method = method_info, data.name = data.name)
+    class(rval) <- "htest"
+    return(rval)
 
-  pvalue <- length(which(distBoot >= distOrig)) / (maxBoot+1)
-  ###
-  statistic        <- distOrig
-  names(statistic) <- "statistic"
-  method_info           <- "Analysis of Graph Variability"
-  rval             <- list(statistic = statistic, p.value = pvalue, method = method_info, data.name = data.name)
-  class(rval)      <- "htest"
-  return(rval)
-
-  #return(list("statistic"=distOrig, "p.value"=pvalue))
 }

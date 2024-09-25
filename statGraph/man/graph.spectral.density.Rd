@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.spectral.density.R
 \name{graph.spectral.density}
 \alias{graph.spectral.density}
-\title{Graph spectral density}
+\title{Graph Spectral Density}
 \usage{
 graph.spectral.density(Graph, method = "diag", ...)
 }
@@ -22,22 +22,18 @@ an \code{npoints}.  \code{from}, \code{to} specify  the lower and upper bound of
 (automatically computed if not given); and \code{npoints} is the number of discretization points (default \code{1024}) of
 the interval <\code{from},\code{to}>.
 There are other parameters that depend on the value of the parameter \code{method}:
-\itemize{
-\item{\code{method='diag'}:}{ then the parameter \code{bandwidth} can be used.
+If \code{method='diag'}, then the parameter \code{bandwidth} can be used.
 This parameter is a string that specifies the criterion to choose the
 bandwidth during the spectral density estimation. Choose between the
-following criteria: "Silverman" (default), "Sturges", "bcv", "ucv" and "SJ".
-"bcv" is an abbreviation of biased cross-validation, while "ucv" means
-unbiased cross-validation. "SJ"  implements the methods of Sheather & Jones
-(1991) to select the bandwidth using pilot estimation of derivatives.}
-\item{\code{method='fast'}:}{ then
-the parameter \code{numCores} can be used. This parameter
+following criteria: 'Silverman' (default), 'Sturges', 'bcv', 'ucv' and 'SJ'.
+'bcv' is an abbreviation of biased cross-validation, while 'ucv' means
+unbiased cross-validation. 'SJ'  implements the methods of Sheather & Jones
+(1991) to select the bandwidth using pilot estimation of derivatives.
+Otherwise, if \code{method='fast'}, then the parameter \code{numCores} can be used. This parameter
 specifies the number of cores (default \code{1}) to use for parallelization.}
-}}
 }
 \value{
-A list with class "statGraph" containing the following components:
-\itemize{
+A list with class 'statGraph' containing the following components:
 \item{\code{method:}}{ a string indicating the used method.}
 \item{\code{info:}}{ a string showing details about the method.}
 \item{\code{data.name:}}{ a string with the data's name(s).}
@@ -46,13 +42,12 @@ A list with class "statGraph" containing the following components:
 \item{\code{from:}}{ a real number corresponding to the smallest value of the x axis.}
 \item{\code{to:}}{ a real number corresponding to the largest value of the x axis.}
 }
-}
 \description{
 \code{graph.spectral.density} returns the exact or degree-based spectral density
 in the interval <\code{from},\code{to}> by using \code{npoints} discretization points.
 }
 \examples{
-set.seed(42)
+set.seed(1)
 G <- igraph::sample_smallworld(dim = 1, size = 50, nei = 2, p = 0.2)
 
 # Obtain the spectral density

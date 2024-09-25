@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.cem.R
 \name{graph.cem}
 \alias{graph.cem}
-\title{Clustering Expectation-Maximization for Graphs (graph.cem)}
+\title{Graph Clustering Expectation-Maximization (gCEM)}
 \usage{
 graph.cem(Graphs, model, k, max_iter = 10, ...)
 }
@@ -13,8 +13,8 @@ eigenvalues , such values will be used to
 compute their spectral density.}
 
 \item{model}{a string that indicates one of the following random graph
-models: "ER" (Erdos-Renyi random graph), "GRG" (geometric random graph), "KR"
-(k regular graph), "WS" (Watts-Strogatz model), and "BA" (Barabási-Albert
+models: 'ER' (Erdos-Renyi random graph), 'GRG' (geometric random graph), 'KR'
+(k regular graph), 'WS' (Watts-Strogatz model), and 'BA' (Barabási-Albert
 model).}
 
 \item{k}{an integer specifying the number of clusters.}
@@ -24,16 +24,14 @@ model).}
 \item{...}{Other relevant parameters for \code{\link{graph.param.estimator}}.}
 }
 \value{
-A list with class "statGraph" containing the following components:
-\itemize{
+A list with class 'statGraph' containing the following components:
 \item{\code{method:}}{ a string indicating the used method.}
 \item{\code{info:}}{ a string showing details about the method.}
 \item{\code{data.name:}}{ a string with the data's name(s).}
-\item{\code{cluster:}}{ a vector of the same length of \code{g} containing the clusterization
+\item{\code{cluster:}}{ a vector of the same length of \code{Graphs} containing the clusterization
 labels.}
 \item{\code{parameters:}}{ a vector containing the estimated parameters for the groups.
 It has the length equals to \code{k}.}
-}
 }
 \description{
 \code{graph.cem} clusters graphs following an expectation-maximization algorithm based
@@ -50,13 +48,13 @@ graph and of the random graph model.
  for(i in 3:4){
    g[[i]] <- igraph::sample_gnp(n=10, p=1)
  }
- res <- graph.cem(g, model="ER", k=2, max_iter=1)
+ res <- graph.cem(g, model='ER', k=2, max_iter=1,eps=0.1)
  res
  }
 }
 \references{
-Celeux, Gilles, and Gerard Govaert. "Gaussian parsimonious clustering
-models." Pattern recognition 28.5 (1995): 781-793.
+Celeux, Gilles, and Gerard Govaert. 'Gaussian parsimonious clustering
+models.' Pattern recognition 28.5 (1995): 781-793.
 
 Sheather, S. J. and Jones, M. C. (1991). A reliable data-based bandwidth
 selection method for kernel density estimation.
