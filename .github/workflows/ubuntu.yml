@@ -1,0 +1,20 @@
+name: Ubuntu
+
+on:
+  pull_request:
+    branches:
+        - '**'
+  push:
+    branches:
+        - '**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: lesserfish/statgraph-base:latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      working-directory: ${{github.workspace}}
+      run: Rscript build.r
+
