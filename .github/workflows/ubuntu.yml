@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: chavauty/statgraph-base:macos
+      image: chavauty/statgraph-base:latest
     steps:
     - uses: actions/checkout@v3
     - name: Build
