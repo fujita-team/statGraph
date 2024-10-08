@@ -3,7 +3,7 @@
 # Run 'Rscript tests.R' to perform tests or 'Rscript build.r' to build the project.
 # For Documentation on how to create tests, please refer to: https://cran.r-project.org/web/packages/testthat/testthat.pdf
 
-RunTest("graph.takahashi.test", {
+RunTest( {
             acceptable_error <- 0.1
             G1 <- G2 <- list()
             for (i in 1:20){
@@ -16,7 +16,7 @@ RunTest("graph.takahashi.test", {
             })
 })
 
-RunTest("graph.takahashi.test", {
+RunTest( {
             acceptable_error <- 0.01
             G1 <- G2 <- list()
             for (i in 1:20){
@@ -30,7 +30,7 @@ RunTest("graph.takahashi.test", {
 })
 
 
-# RunTest("takahashi.test", {
+# RunTest( {
 #             acceptable_error <- 0.1
 #             G1 <- G2 <- list()
 #             for (i in 1:20){

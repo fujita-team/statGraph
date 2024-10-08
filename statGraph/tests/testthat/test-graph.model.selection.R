@@ -3,7 +3,7 @@
 # Run 'Rscript tests.R' to perform tests or 'Rscript build.r' to build the project.
 # For Documentation on how to create tests, please refer to: https://cran.r-project.org/web/packages/testthat/testthat.pdf
 
-RunTest("graph.model.selection", {
+RunTest( {
             #' # Erdos-Renyi graph
             model1 <- function(n, p){
                 return(igraph::sample_gnp(n, p))
@@ -23,7 +23,7 @@ RunTest("graph.model.selection", {
             })
 })
 
-RunTest("graph.model.selection", {
+RunTest( {
             #' # Erdos-Renyi graph
             model1 <- function(n, p){
                 return(igraph::sample_gnp(n, p))
@@ -44,7 +44,7 @@ RunTest("graph.model.selection", {
 })
 
 
-RunTest("graph.model.selection", {
+RunTest( {
             #' # Erdos-Renyi graph
             model1 <- function(n, p){
                 return(igraph::sample_gnp(n, p))
@@ -64,7 +64,7 @@ RunTest("graph.model.selection", {
             })
 })
 
-RunTest("graph.model.selection", {
+RunTest( {
             #' # Erdos-Renyi graph
             model1 <- function(n, p){
                 return(igraph::sample_gnp(n, p))

@@ -4,7 +4,7 @@
 # For Documentation on how to create tests, please refer to: https://cran.r-project.org/web/packages/testthat/testthat.pdf
 
 
-RunTest("graph.param.estimator", {
+RunTest( {
     tolerance <- 0.01
     model <- function(n, p) {
         return(igraph::sample_gnp(n, p))
@@ -18,7 +18,7 @@ RunTest("graph.param.estimator", {
     )
 })
 
-RunTest("graph.param.estimator", {
+RunTest( {
     tolerance <- 0.01
     model <- function(n, p) {
         return(igraph::sample_gnp(n, p))
@@ -32,7 +32,7 @@ RunTest("graph.param.estimator", {
     )
 })
 
-RunTest("graph.param.estimator", {
+RunTest( {
     tolerance <- 0.01
     model <- function(n, p) {
         return(igraph::sample_gnp(n, p))
@@ -46,7 +46,7 @@ RunTest("graph.param.estimator", {
     )
 })
 
-RunTest("graph.param.estimator", {
+RunTest( {
     tolerance <- 0.01
     model <- function(n, p) {
         return(igraph::sample_gnp(n, p))

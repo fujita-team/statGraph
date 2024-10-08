@@ -4,7 +4,7 @@
 # For Documentation on how to create tests, please refer to: https://cran.r-project.org/web/packages/testthat/testthat.pdf
 
 
-RunTest("anogva", {
+RunTest({
             acceptable_error <- 0.1
             g1 <- g2 <- g3 <- list()
             for (i in 1:20){
@@ -20,7 +20,7 @@ RunTest("anogva", {
                 })
 })
 
-RunTest("anogva", {
+RunTest({
             acceptable_error <- 0.1
             g1 <- g2 <- g3 <- list()
             for (i in 1:20){
@@ -36,7 +36,7 @@ RunTest("anogva", {
                })
 })
 
-RunTest("anogva", {
+RunTest({
             acceptable_error <- 0.01
             g1 <- g2 <- g3 <- list()
             for (i in 1:20){
@@ -52,7 +52,7 @@ RunTest("anogva", {
                 })
 })
 
-RunTest("anogva", {
+RunTest({
             acceptable_error <- 0.01
             g1 <- g2 <- g3 <- list()
             for (i in 1:20){
@@ -67,6 +67,8 @@ RunTest("anogva", {
                 expect_lt(result$p.value, acceptable_error)
                })
 })
+
+
 # TODO: Should we also test H1? We would need to verify if the distribution of p-values obtained when all groups are the same form a uniform distribution.
 # This is probably a little bit too intense for automatic testing.
 # For now, we are going to be skipping it!
