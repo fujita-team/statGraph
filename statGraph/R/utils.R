@@ -167,6 +167,16 @@ kernelBandwidth <- function(x) {
 # functions to obtain the smallest and largest eigenvalues of a graph or a list of graphs
 get.smallest.eigenvalue <- function(Graphs) {
     if (methods::is(Graphs, "igraph")) {
+      if(igraph::is_directed(Graphs)){
+        if(is.null(Graphs$eigenvalues)) {
+          # TODO: FIX THIS
+          return(c(-1, -1))
+        } else {
+          # TODO: FIX THIS
+          return(c(-1, -1))
+        }
+      } else {
+        cat("DOGSHIT\n")
         if (is.null(Graphs$eigenvalues)) {
             A <- igraph::as_adjacency_matrix(Graphs, type = "both")
             ev <- rARPACK::eigs_sym(A, k = 1, which = "SA")$values[1]
@@ -175,8 +185,9 @@ get.smallest.eigenvalue <- function(Graphs) {
         } else {
             return(Graphs$eigenvalues[igraph::vcount(Graphs)])
         }
+      }
     } else if (methods::is(Graphs, "list")) {
-        return(Reduce(f = "min", Map(f = get.smallest.eigenvalue, Graphs)))
+        return(Reduce(f = "pmin", Map(f = get.smallest.eigenvalue, Graphs)))
     }
     stop("Input should be a Graph or a list of graphs.")
 }
@@ -184,6 +195,15 @@ get.smallest.eigenvalue <- function(Graphs) {
 # functions to obtain the largest and largest eigenvalues of a graph or a list of graphs
 get.largest.eigenvalue <- function(Graphs) {
     if (methods::is(Graphs, "igraph")) {
+      if(igraph::is_directed(Graphs)){
+        if(is.null(Graphs$eigenvalues)) {
+          # TODO: FIX THIS
+          return(c(1, 1))
+        } else {
+          # TODO: FIX THIS
+          return(c(1, 1))
+        }
+      } else {
         if (is.null(Graphs$eigenvalues)) {
             A <- igraph::as_adjacency_matrix(Graphs, type = "both")
             ev <- rARPACK::eigs_sym(A, k = 1)$values[1]
@@ -192,8 +212,9 @@ get.largest.eigenvalue <- function(Graphs) {
         } else {
             return(Graphs$eigenvalues[1])
         }
+      }
     } else if (methods::is(Graphs, "list")) {
-        return(Reduce(f = "max", Map(f = get.largest.eigenvalue, Graphs)))
+        return(Reduce(f = "pmax", Map(f = get.largest.eigenvalue, Graphs)))
     }
     stop("Input should be a Graph or a list of graphs.")
 }
