@@ -37,7 +37,7 @@
 #' @import stats
 #' @import methods
 #' @export
-graph.dist <- function(Graphs, dist = "JS", ...) {
+graph.dist <- function(Graphs, dist = "JS", symmetric = TRUE, ...) {
     if (!valid.input(Graphs, level = 1)) {
         stop("The input should be a list of igraph objects!")
     }
@@ -46,11 +46,21 @@ graph.dist <- function(Graphs, dist = "JS", ...) {
 
     nGraphs <- length(Graphs)
     D <- matrix(0, nGraphs, nGraphs)
+
     for (i in 1:nGraphs) {
-        for (j in 1:nGraphs) {
+
+        # If the distance is symmetric, don`t bother computing both dist(x, y) and dist(y, x)
+        s <- if(symmetric) { i } else { 1 }
+
+        for (j in s:nGraphs) {
             D[i, j] <- distance(Graphs[[i]]$density, Graphs[[j]]$density, dist = dist)
         }
     }
+
+    if(symmetric){
+      D[lower.tri(D)] <- t(D)[lower.tri(D)]
+    }
+
     return(D)
 }
 
