@@ -75,7 +75,7 @@ gaussianDensity.real <- function(x, from = NULL, to = NULL, bandwidth = "Silverm
         f <- stats::density(x, bw = bw, from = from, to = to, n = npoints)
     }
     f$y <- f$y + 1e-12  # we do not want the area to be zero, so we add a very small number
-    area <- trapezoidSum(f$x, f$y)
+    area <- trapezoidSum.real(f$x, f$y)
     return(list(x      = f$x
               , y      = f$y/area
               , from   = min(f$x)
@@ -86,7 +86,7 @@ gaussianDensity.real <- function(x, from = NULL, to = NULL, bandwidth = "Silverm
 
 gaussianDensity.complex <- function(x, from = NULL, to = NULL, bandwidth = "Silverman", npoints = 1024){
 
-  # Convert x from complex plane to R x R
+  # Convert x from complex plane to RxR
   eigenmat <- matrix(NA, nrow = length(x), ncol = 2)
   eigenmat[, 1] <- Re(x)
   eigenmat[, 2] <- Im(x)
