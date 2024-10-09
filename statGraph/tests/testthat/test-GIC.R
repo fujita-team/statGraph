@@ -12,6 +12,8 @@ RunTest({
             })
 })
 RunTest({
+            acceptable_error <- 0.1
+            G <- igraph::sample_gnp(n=50, p=0.5)
             result2 <- GIC(G, igraph::sample_gnp, 0.5)
             test_that("GIC", {
                 expect_lt(result1$value, acceptable_error)
