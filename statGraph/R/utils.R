@@ -176,7 +176,6 @@ get.smallest.eigenvalue <- function(Graphs) {
           return(c(-1, -1))
         }
       } else {
-        cat("DOGSHIT\n")
         if (is.null(Graphs$eigenvalues)) {
             A <- igraph::as_adjacency_matrix(Graphs, type = "both")
             ev <- rARPACK::eigs_sym(A, k = 1, which = "SA")$values[1]
