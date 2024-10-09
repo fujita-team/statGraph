@@ -24,7 +24,7 @@ RunTest( {
         return(igraph::sample_gnp(n, p))
     }
     G <- model(100, 0.3)
-    result <- graph.param.estimator(G, model,  seq(0.2, 0.8, 0.01), search="ternary")
+    result <- suppressWarnings(graph.param.estimator(G, model,  seq(0.2, 0.8, 0.01), search="ternary"))
     test_that("Ternary search is working",
               {
                 expect_equal(result$param, 0.3, tolerance = tolerance)
