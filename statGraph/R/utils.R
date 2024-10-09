@@ -1,19 +1,35 @@
 # obtain the eigenvalues of the graph, if Graph contains eigenvalues as attribute then such values are returned
-graph.eigenvalues <- function(Graph) {
-    if (!is.null(Graph$density)) {
-        return(NULL)
-    }
-    if (!is.null(Graph$eigenvalues)) {
-        return(Graph$eigenvalues)
-    } else {
-        A <- igraph::as_adjacency_matrix(Graph)
-        eigenvalues <- as.numeric(eigen(A, only.values = TRUE, symmetric = TRUE)$values)
-        eigenvalues <- eigenvalues/sqrt(nrow(A))
-        rm(A)
-        return(eigenvalues)
-    }
+graph.eigenvalues.real <- function(Graph) {
+  A <- igraph::as_adjacency_matrix(Graph)
+  eigenvalues <- as.numeric(eigen(A, only.values = TRUE, symmetric = TRUE)$values)
+  eigenvalues <- eigenvalues/sqrt(nrow(A))
+  rm(A)
+  return(eigenvalues)
 }
 
+graph.eigenvalues.complex <- function(Graph) {
+  A <- igraph::as_adjacency_matrix(Graph)
+  eigenvalues <- eigen(A, only.values = TRUE, symmetric = FALSE)$values
+  eigenvalues <- eigenvalues/sqrt(nrow(A))
+  rm(A)
+  return(eigenvalues)
+}
+
+graph.eigenvalues <- function(Graph) {
+  if (!is.null(Graph$density)) {
+    return(NULL)
+  }
+  if (!is.null(Graph$eigenvalues)) {
+    return(Graph$eigenvalues)
+  } else {
+    directed <- igraph::is_directed(Graph)
+    if(directed){
+      graph.eigenvalues.complex(Graph)
+    } else {
+      graph.eigenvalues.real(Graph)
+    }
+  }
+}
 # checks if the variable is a graph, a list of graphs, or a list of lists of graphs level = 0: checks if input is a graph level = 1: checks if the input is a list of graphs level = 2: checks if the input is a list of list of
 # graphs, and so on
 valid.input <- function(Graph, level = 0) {
@@ -32,7 +48,7 @@ valid.input <- function(Graph, level = 0) {
 
 
 # Returns the density function for a sample x at n points in the interval [from, to]
-gaussianDensity <- function(x, from = NULL, to = NULL, bandwidth = "Silverman", npoints = 1024) {
+gaussianDensity.real <- function(x, from = NULL, to = NULL, bandwidth = "Silverman", npoints = 1024) {
     # if all values of x are the same, only SIlverman works
     if ((max(x) == min(x) && (bandwidth != "Silverman"))) {
         # this case happens when all eigenvalues are equal, and the used bandwidth is sturges
@@ -60,12 +76,53 @@ gaussianDensity <- function(x, from = NULL, to = NULL, bandwidth = "Silverman", 
     }
     f$y <- f$y + 1e-12  # we do not want the area to be zero, so we add a very small number
     area <- trapezoidSum(f$x, f$y)
-    return(list(x = f$x, y = f$y/area, from = min(f$x), to = max(f$x), bw = f$bw, method = "exact"))
+    return(list(x      = f$x
+              , y      = f$y/area
+              , from   = min(f$x)
+              , to     = max(f$x)
+              , bw     = f$bw
+              , method = "exact"))
+}
+
+gaussianDensity.complex <- function(x, from = NULL, to = NULL, bandwidth = "Silverman", npoints = 1024){
+
+  # Convert x from complex plane to R x R
+  eigenmat <- matrix(NA, nrow = length(x), ncol = 2)
+  eigenmat[, 1] <- Re(x)
+  eigenmat[, 2] <- Im(x)
+
+  if(is.null(from) || is.null(to)){
+    f <- ks::kde(x=eigenmat, gridsize=c(npoints, npoints));
+  } else {
+    f <- ks::kde(x=eigenmat, gridsize=c(npoints, npoints), xmin=from, xmax = to);
+  }
+
+  f$estimate = f$estimate + 1e-12;
+  volume <- trapezoidSum.complex(f$eval.points, f$estimate)
+
+  return(list(x      = f$eval.points
+            , y      = f$estimate/volume
+            , from   = c( min(f$eval.points[[1]]), min(f$eval.points[[2]]))
+            , to     = c( max(f$eval.points[[1]]), max(f$eval.points[[2]]))
+            , bw     = ""
+            , method = "exact"))
+}
+
+gaussianDensity <- function(x, from = NULL, to = NULL, bandwidth = "Silverman", npoints = 1024, directed = FALSE){
+  if(directed){
+    # Gaussian density of a complex sample
+    gaussianDensity.complex(x = x, from = from, to = to, bandwidth = bandwidth, npoints = npoints)
+  }
+  else{
+    # Gaussian density of a real sample
+    gaussianDensity.real(x = x, from = from, to = to, bandwidth = bandwidth, npoints = npoints)
+  }
 }
 
 
+
 # Given a partition x[1]...x[n] and y[i] = f(x[i]), returns the trapezoid sum approximation for int_{x[1]}^{x[n]}{f(x)dx}
-trapezoidSum <- function(x, y) {
+trapezoidSum.real <- function(x, y) {
     n <- length(x)
     delta <- (x[2] - x[1])
     area <- sum(y[2:(n - 1)])
@@ -73,6 +130,32 @@ trapezoidSum <- function(x, y) {
     return(area)
 }
 
+trapezoidSum.complex <- function(x, y) {
+  x1 <- x[[1]]
+  x2 <- x[[2]]
+
+  Lf <- dim(y)
+  L1 <- length(x1)
+  L2 <- length(x2)
+
+  nan <- is.na(y)
+  y[nan] <- 0
+  y[2:(L1-1), ] = y[2:(L1-1), ] * 2;
+  y[, 2:(L2-1)] = y[ , 2:(L2-1)] * 2;
+  return(sum(y) * diff(x1)[1] * diff(x2)[1] / 4)
+}
+
+trapezoidSum <- function(x, y){
+  if(is.matrix(y)){
+    # x is a list with x1 = x[[1]] and x2 = x[[2]], and y is a matrix such that
+    # y[i, j] = f( x1[i], x2[j]) for some function f.
+    trapezoidSum.complex(x, y)
+  } else {
+    # x and y are both numeric such that
+    # y[i] = f( x[i] ) for some function f.
+    trapezoidSum.real(x, y)
+  }
+}
 
 # Returns the kernel bandwidth for a sample x based on Sturge's criterion
 kernelBandwidth <- function(x) {
