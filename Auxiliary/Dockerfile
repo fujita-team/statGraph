@@ -4,9 +4,6 @@ FROM ubuntu:22.04
 # Set environment variables to non-interactive to avoid prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Copy the R script to the container
-COPY install_packages.r /statgraph/install_packages.R
-
 # Update package list and install dependencies
 RUN apt-get update 
 RUN apt install -y \
@@ -26,9 +23,15 @@ RUN apt install -y \
             libcurl4-openssl-dev \
             libxml2-dev \
             libssl-dev \
-            libfontconfig1-dev
+            libfontconfig1-dev \
+            libgit2-dev
 
 # Update R packages
-RUN Rscript /statgraph/install_packages.R
-
-
+RUN Rscript -e "install.packages('devtools')"
+RUN Rscript -e "install.packages('igraph')"
+RUN Rscript -e "install.packages('rARPACK')"
+RUN Rscript -e "install.packages('foreach')"
+RUN Rscript -e "install.packages('doParallel')"
+RUN Rscript -e "install.packages('ks')"
+RUN Rscript -e "install.packages('getopt')"
+RUN Rscript -e "install.packages('renv')"

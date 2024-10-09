@@ -33,32 +33,8 @@ poem <-
     twice as many stars as usual."
 
 
-RunTest <- function(Name, Code, seed = generateSeed(poem)){
+RunTest <- function(Code, seed = generateSeed(poem)){
     set.seed(seed)
-    if(is.null(VALID_TESTS)){
-        eval.parent(Code)
-        return()
-    }
-    if(VALID_TESTS$mode == "ALL")
-    {
-        eval.parent(Code)
-        return()
-    }
-    if(VALID_TESTS$mode == "WHITELIST")
-    {
-        if(Name %in% VALID_TESTS$list)
-        {
-            eval.parent(Code)
-            return()
-        }
-    }
-    if(VALID_TESTS$mode == "BLACKLIST")
-    {
-        if(! Name %in% VALID_TESTS$list)
-        {
-            eval.parent(Code)
-            return()
-        }
-    }
+    eval.parent(Code)
 }
 
