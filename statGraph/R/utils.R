@@ -169,11 +169,16 @@ get.smallest.eigenvalue <- function(Graphs) {
     if (methods::is(Graphs, "igraph")) {
       if(igraph::is_directed(Graphs)){
         if(is.null(Graphs$eigenvalues)) {
-          # TODO: FIX THIS
-          return(c(-1, -1))
+          ev <- graph.eigenvalues.complex(Graphs)
+          Graphs$eigenvalues <- ev
+          rmin <- min(Re(ev))
+          imin <- min(Im(ev))
+          return(c(rmin, imin))
         } else {
-          # TODO: FIX THIS
-          return(c(-1, -1))
+          ev <- Graphs$eigenvalues
+          rmin <- min(Re(ev))
+          imin <- min(Im(ev))
+          return(c(rmin, imin))
         }
       } else {
         if (is.null(Graphs$eigenvalues)) {
@@ -196,11 +201,16 @@ get.largest.eigenvalue <- function(Graphs) {
     if (methods::is(Graphs, "igraph")) {
       if(igraph::is_directed(Graphs)){
         if(is.null(Graphs$eigenvalues)) {
-          # TODO: FIX THIS
-          return(c(1, 1))
+          ev <- graph.eigenvalues.complex(Graphs)
+          Graphs$eigenvalues <- ev
+          rmax <- max(Re(ev))
+          imax <- max(Im(ev))
+          return(c(rmax, imax))
         } else {
-          # TODO: FIX THIS
-          return(c(1, 1))
+          ev <- Graphs$eigenvalues
+          rmax <- max(Re(ev))
+          imax <- max(Im(ev))
+          return(c(rmax, imax))
         }
       } else {
         if (is.null(Graphs$eigenvalues)) {
