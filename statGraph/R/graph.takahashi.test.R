@@ -71,8 +71,8 @@ graph.takahashi.test <- function(Graphs1, Graphs2, maxBoot = 1000, dist = "JS", 
     data.name <- paste(deparse(substitute(Graphs1)), "and", deparse(substitute(Graphs2)))
 
     # obtain support for the spectral densities
-    from <- min(get.smallest.eigenvalue(Graphs1), get.smallest.eigenvalue(Graphs2))
-    to <- max(get.largest.eigenvalue(Graphs1), get.largest.eigenvalue(Graphs2))
+    from <- pmin(get.smallest.eigenvalue(Graphs1), get.smallest.eigenvalue(Graphs2))
+    to <- pmax(get.largest.eigenvalue(Graphs1), get.largest.eigenvalue(Graphs2))
 
     # compute spectral densities for each group of graphs
     Graphs1 <- set.list.spectral.density(Graphs1, from = from, to = to, ...)
