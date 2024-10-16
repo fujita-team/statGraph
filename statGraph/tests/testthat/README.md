@@ -16,8 +16,6 @@ Alternative, set your code as a variable, and invoke RunTest by calling this var
     }
     RunTest(test_code)`
 
-Do **NOT** run code outside of the method RunTest, otherwise consistency of test results cannot be assured.
-
 For indications on how to verify certain conditions, please read: https://testthat.r-lib.org/reference/
 
-Do **NOT** remove the file *helper-methods.R*
+Please, do not remove the file *setup.R*.
