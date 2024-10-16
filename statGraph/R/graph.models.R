@@ -183,3 +183,21 @@ get.model.interval <- function(n, m, model, parameter, eps, search) {
     }
     stop(paste0("The ", search, " method does not exists! Use 'grid' or 'ternary' instead."))
 }
+
+graph.extended.model <- function(Model, n, p1 = c(), p2 = c()){
+  p1 <- as.list(c(n, p1))
+  p2 <- as.list(c(n, p2))
+
+  g1 <- do.call(Model, p1)
+  g2 <- do.call(Model, p2)
+
+  m1 <- as.matrix( igraph::as_adjacency_matrix(g1))
+  m2 <- t(as.matrix( igraph::as_adjacency_matrix(g2)))
+
+  m1[upper.tri(m1)] <- 0
+  m2[lower.tri(m2)] <- 0
+
+  m <- m1 + m2
+
+  igraph::graph_from_adjacency_matrix(m)
+}
