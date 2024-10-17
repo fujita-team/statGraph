@@ -84,7 +84,7 @@
 #' }
 #'
 #' @export
-graph.model.selection <- function(Graph, models = NULL, parameters = NULL, ...) {
+graph.model.selection <- function(Graph, models = NULL, parameters = NULL, model_names = NULL, ...) {
 
     if (!valid.input(Graph)) {
         stop("The input should be an igraph object!")
@@ -99,10 +99,12 @@ graph.model.selection <- function(Graph, models = NULL, parameters = NULL, ...) 
 
     results <- matrix(NA, length(models), 2)
     # if models is a list of functions return the position/ otherwise return the model name
-    model_names <- c()
-    for (idx in 1:length(models)) {
-        if (methods::is(models[idx], "function"))
-            model_names <- c(model_names, as.character(idx)) else model_names <- c(model_names, models[idx])
+    if(is.null(model_names)){
+      model_names <- c()
+      for (idx in 1:length(models)) {
+          if (methods::is(models[idx], "function"))
+              model_names <- c(model_names, as.character(idx)) else model_names <- c(model_names, models[idx])
+      }
     }
     rownames(results) <- unlist(model_names)
     colnames(results) <- c("param", "GIC")

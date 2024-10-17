@@ -83,3 +83,105 @@ RunTest( {
                           expect_equal(choice, 2)
             })
 })
+
+RunTest( {
+
+  # Extended models
+  PAE <- function(n, p)
+  {
+    f <- function(N, P) igraph::sample_pa(n=N, power=1 * P + 0.001, m=N/10)
+    statGraph:::graph.extended.model(f, n, p, p)
+  }
+
+  WSE <- function(n, p)
+  {
+    f <- function(N, P) igraph::sample_smallworld(dim=1, size=N, nei=N/10, p=P)
+    statGraph:::graph.extended.model(f, n, p, p)
+  }
+
+  ERE <- function(n, p){
+    f <- function(N, P) igraph::sample_gnp(N, P)
+    statGraph:::graph.extended.model(f, n, p, p)
+  }
+
+  # A graph
+  G <- ERE(100, 0.3)
+
+  result <- statGraph::graph.model.selection(G, models = list(PAE, WSE, ERE), parameters = list(
+    list(lo=0.1, hi=0.9),
+    list(lo=0.1, hi=0.9),
+    list(lo=0.1, hi=0.9)),
+    , model_names = c("PAE", "WSE", "ERE"), ngraphs=5, npoints=512)
+
+  test_that("graph.model.selection is working for directed graphs", {
+    expect_equal(result$model, "ERE")
+  })
+})
+
+RunTest( {
+
+  # Extended models
+  PAE <- function(n, p)
+  {
+    f <- function(N, P) igraph::sample_pa(n=N, power=1 * P + 0.001, m=N/10)
+    statGraph:::graph.extended.model(f, n, p, p)
+  }
+
+  WSE <- function(n, p)
+  {
+    f <- function(N, P) igraph::sample_smallworld(dim=1, size=N, nei=N/10, p=P)
+    statGraph:::graph.extended.model(f, n, p, p)
+  }
+
+  ERE <- function(n, p){
+    f <- function(N, P) igraph::sample_gnp(N, P)
+    statGraph:::graph.extended.model(f, n, p, p)
+  }
+
+  # A graph
+  G <- PAE(100, 0.3)
+
+  result <- statGraph::graph.model.selection(G, models = list(PAE, WSE, ERE), parameters = list(
+    list(lo=0.1, hi=0.9),
+    list(lo=0.1, hi=0.9),
+    list(lo=0.1, hi=0.9)),
+    , model_names = c("PAE", "WSE", "ERE"), ngraphs=5, npoints=512)
+
+  test_that("graph.model.selection is working for directed graphs", {
+    expect_equal(result$model, "PAE")
+  })
+})
+
+RunTest( {
+
+  # Extended models
+  PAE <- function(n, p)
+  {
+    f <- function(N, P) igraph::sample_pa(n=N, power=1 * P + 0.001, m=N/10)
+    statGraph:::graph.extended.model(f, n, p, p)
+  }
+
+  WSE <- function(n, p)
+  {
+    f <- function(N, P) igraph::sample_smallworld(dim=1, size=N, nei=N/10, p=P)
+    statGraph:::graph.extended.model(f, n, p, p)
+  }
+
+  ERE <- function(n, p){
+    f <- function(N, P) igraph::sample_gnp(N, P)
+    statGraph:::graph.extended.model(f, n, p, p)
+  }
+
+  # A graph
+  G <- WSE(100, 0.3)
+
+  result <- statGraph::graph.model.selection(G, models = list(PAE, WSE, ERE), parameters = list(
+    list(lo=0.1, hi=0.9),
+    list(lo=0.1, hi=0.9),
+    list(lo=0.1, hi=0.9)),
+    , model_names = c("PAE", "WSE", "ERE"), ngraphs=5, npoints=512)
+
+  test_that("graph.model.selection is working for directed graphs", {
+    expect_equal(result$model, "WSE")
+  })
+})
