@@ -25,7 +25,7 @@ Before attempting to build this project, make sure that you have all of the requ
 
 Once the requirements are installed, you can build the project by running:
 
-    ./build.r`
+    ./build.r
 
 
 or
