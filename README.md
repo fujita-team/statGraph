@@ -48,7 +48,7 @@ Alternative, open the file `statGraph.Rproj` in RStudio and simply click on `Tes
 
 ### Structure of this project
 
-This project uses the structured of a standard R project. To find out more: https://r-pkgs.org/whole-game.html
+This project uses the standard structure of a R project described in https://r-pkgs.org/whole-game.html
 
 In short: Methods should be added to .R files located in statGraph/R/. To make them public, they have to be exported by adding the corresponding @export tag before their constructors.
 
