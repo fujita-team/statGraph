@@ -21,7 +21,7 @@ Contains statistical methods to analyze graphs, such as graph parameter estimati
 
 Before attempting to build this project, make sure that you have all of the requirements needed by running:
 
-> `apt install -y r-base libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev r-cran-tinytex texlive texinfo texlive-fonts-extra curl libcurl4 libharfbuzz-dev libfribidi-dev libcurl4-openssl-dev libxml2-dev libssl-dev libfontconfig1-dev`
+> `apt install -y r-base libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev r-cran-tinytex texlive texinfo texlive-fonts-extra curl libcurl4 libharfbuzz-dev libfribidi-dev libcurl4-openssl-dev libxml2-dev libssl-dev libfontconfig1-dev libgit2-dev`
 
 Once the requirements are installed, you can build the project by running:
 
