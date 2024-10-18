@@ -74,6 +74,12 @@ graph.spectral.density <- function(Graph, method = "diag", ...) {
     if (!valid.input(Graph)) {
         stop("The input should be an igraph object!")
     }
+
+    directed <- igraph::is_directed(Graph)
+    if(directed && method != "diag"){
+      stop("Only 'diag' method is supported for directed graphs.")
+    }
+
     den_fun <- NULL
     if (is.null(Graph$density)) {
         density_parameters <- get.density.parameters(method = method, ...)
@@ -145,9 +151,11 @@ graph.fast.spectral.density <- function(Graph, from = NULL, to = NULL, npoints =
 
 # Returns the exact spectral density for a given Graph
 graph.diag.spectral.density <- function(Graph, from = NULL, to = NULL, bandwidth = "Silverman", npoints = 1024) {
+    directed <- igraph::is_directed(Graph)
     data.name <- deparse(substitute(Graph))
     eigenvalues <- graph.eigenvalues(Graph = Graph)
-    den_fun <- gaussianDensity(eigenvalues, from, to, bandwidth, npoints)
+    den_fun <- gaussianDensity(eigenvalues, from, to, bandwidth, npoints, directed = directed)
+
     ###
     method_info <- "Spectral Density of a Graph"
     info <- "Spectral density obtained with the exact method"

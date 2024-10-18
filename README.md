@@ -21,11 +21,11 @@ Contains statistical methods to analyze graphs, such as graph parameter estimati
 
 Before attempting to build this project, make sure that you have all of the requirements needed by running:
 
-> `apt install -y r-base libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev r-cran-tinytex texlive texinfo texlive-fonts-extra curl libcurl4 libharfbuzz-dev libfribidi-dev libcurl4-openssl-dev libxml2-dev libssl-dev libfontconfig1-dev`
+> `apt install -y r-base libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev r-cran-tinytex texlive texinfo texlive-fonts-extra curl libcurl4 libharfbuzz-dev libfribidi-dev libcurl4-openssl-dev libxml2-dev libssl-dev libfontconfig1-dev libgit2-dev`
 
 Once the requirements are installed, you can build the project by running:
 
-    ./build.r`
+    ./build.r
 
 
 or
@@ -38,27 +38,17 @@ If you are running the [Nix Package Manager](https://nixos.org/guides/how-nix-wo
 
 ### Testing
 
-Test files are located in directory statGraph/tests/testthat/. It is not advisable to attempt to run the test script files directly.
+Test files are located in directory statGraph/tests/testthat/. 
 
 In order to perform tests, run the following:
 
-    ./test.r [Arguments]
+    ./test.r 
 
-The test.r script file has three modes of operation, which can be selected using by passing the appropriate argument.
-
-The arguments that can be passed to test.r consist of the following:
-
-    -a [or no argument passed] - Runs all tests
-    -i TEST1,TEST2,TEST3...    - Runs only the tests described in the argument following -i. This has to be a comma separated list of test names.
-    -e TEST1,TEST2,TEST3...    - Runs all but the tests described in the argument following -e. This has to be a comma separated list of test names.
-
-For example, the following command only runs the tests graph.param.estimator and graph.model.selection
-
-    ./test.r -i graph.param.estimator,graph.model.selection
+Alternative, open the file `statGraph.Rproj` in RStudio and simply click on `Test`. This will run all tests. To run individual test files, open them in RStudio and click on `Run Tests`.
 
 ### Structure of this project
 
-This project uses the structured of a standard R project. To find out more: https://r-pkgs.org/whole-game.html
+This project uses the standard structure of a R project described in https://r-pkgs.org/whole-game.html
 
 In short: Methods should be added to .R files located in statGraph/R/. To make them public, they have to be exported by adding the corresponding @export tag before their constructors.
 

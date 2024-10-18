@@ -37,7 +37,7 @@
 #' @import stats
 #' @import methods
 #' @export
-graph.dist <- function(Graphs, dist = "JS", ...) {
+graph.dist <- function(Graphs, dist = "JS", symmetric = TRUE, ...) {
     if (!valid.input(Graphs, level = 1)) {
         stop("The input should be a list of igraph objects!")
     }
@@ -46,11 +46,20 @@ graph.dist <- function(Graphs, dist = "JS", ...) {
 
     nGraphs <- length(Graphs)
     D <- matrix(0, nGraphs, nGraphs)
+
     for (i in 1:nGraphs) {
-        for (j in 1:nGraphs) {
+        # If the distance is symmetric, don`t bother computing both dist(x, y) and dist(y, x)
+        s <- if(symmetric) { i } else { 1 }
+
+        for (j in s:nGraphs) {
             D[i, j] <- distance(Graphs[[i]]$density, Graphs[[j]]$density, dist = dist)
         }
     }
+
+    if(symmetric){
+      D[lower.tri(D)] <- t(D)[lower.tri(D)]
+    }
+
     return(D)
 }
 
@@ -74,21 +83,21 @@ distance <- function(f1, f2, dist = "KL") {
     stop(paste0(dist, " distance measure is not valid. Use: KL, JS ,L1, or L2"))
 }
 
-# Return the L1 norm between two densities
+# Return the L1 norm between two densities. This works with both real and complex distributions.
 L1 <- function(f1, f2) {
     y <- abs(f1$y - f2$y)
     return(trapezoidSum(f1$x, y))
 }
 
 
-# Returns the L2 norm between two densities
+# Returns the L2 norm between two densities. This works with both real and complex distributions.
 L2 <- function(f1, f2) {
     y <- (f1$y - f2$y)^2
     return(trapezoidSum(f1$x, y))
 }
 
 # Returns the Kullback-Leibler divergence between two densities
-KL <- function(f1, f2) {
+KL.real <- function(f1, f2) {
     y <- f1$y
     diff_zero <- (y != 0)
     eq_zero <- (f2$y == 0)
@@ -100,10 +109,24 @@ KL <- function(f1, f2) {
     y[diff_zero] <- y[diff_zero] * (log(y[diff_zero]) - log(f2$y[diff_zero]))
 
     # y <- f1$y n <- length(y) for (i in 1:n) { if (y[i] != 0 && f2$y[i] == 0){ return (Inf) } if (y[i] != 0) y[i] <- y[i]*log(y[i]/f2$y[i]) }
-    return(trapezoidSum(f1$x, y))
+    return(trapezoidSum.real(f1$x, y))
 }
 
-# Returns the Jensen-Shannon divergence between two densities
+KL.complex <- function(f1, f2){
+  y <- f1$y
+  y <- ifelse(y != 0, y*log(y/f2$y), y)
+  return(trapezoidSum.complex(f1$x, y))
+}
+
+KL <- function(f1, f2){
+  if(is.matrix(f1$y)){
+    KL.complex(f1, f2)
+  } else {
+    KL.real(f1, f2)
+  }
+}
+
+# Returns the Jensen-Shannon divergence between two densities. This works with both real and complex eigenvalues (I THINK!)
 JS <- function(f1, f2) {
     fm <- f1
     fm$y <- (f1$y + f2$y)/2

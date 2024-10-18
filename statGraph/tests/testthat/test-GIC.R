@@ -3,21 +3,49 @@
 # Run 'Rscript tests.R' to perform tests or 'Rscript build.r' to build the project.
 # For Documentation on how to create tests, please refer to: https://cran.r-project.org/web/packages/testthat/testthat.pdf
 
-# RunTest("GIC", {
-#             acceptable_error <- 0.1
-#             G <- igraph::sample_gnp(n=50, p=0.5)
-#
-#             result1 <- GIC(G, "ER", 0.5)
-#             test_that("GIC", {
-#                 expect_lt(result1$value, acceptable_error)
-#             })
-# })
-# RunTest("GIC", {
-#             model <- function(n, p){
-#                 return(igraph::sample_gnp(n, p))
-#             }
-#             result2 <- GIC(G, model, 0.5)
-#             test_that("GIC", {
-#                 expect_lt(result1$value, acceptable_error)
-#             })
-# })
+RunTest({
+            acceptable_error <- 0.1
+            G <- igraph::sample_gnp(n=50, p=0.5)
+            result1 <- GIC(G, "ER", 0.5)
+            test_that("GIC", {
+                expect_lt(result1$value, acceptable_error)
+            })
+})
+RunTest({
+            acceptable_error <- 0.1
+            G <- igraph::sample_gnp(n=50, p=0.5)
+            result2 <- GIC(G, igraph::sample_gnp, 0.5)
+            test_that("GIC", {
+                expect_lt(result1$value, acceptable_error)
+            })
+})
+
+RunTest({
+  acceptable_error <- 0.1
+  Model <- function(n, p){
+    igraph::sample_gnp(n, p, directed=TRUE)
+  }
+
+  G <- Model(n=50, p=0.5)
+
+  result1 <- GIC(G, Model, 0.5, ngraphs=10)
+  test_that("GIC", {
+    expect_lt(result1$value, acceptable_error)
+  })
+})
+
+RunTest({
+  acceptable_error <- 0.1
+  Model <- function(n, p){
+    igraph::sample_gnp(n, p, directed=TRUE)
+  }
+
+  G <- Model(n=50, p=0.5)
+
+  result1 <- GIC(G, Model, 0.5, ngraphs=10)
+  result2 <- GIC(G, Model, 0.6, ngraphs=10)
+
+  test_that("GIC", {
+    expect_lt(result1$value, result2$value)
+  })
+})

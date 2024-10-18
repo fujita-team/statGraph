@@ -30,15 +30,15 @@ RunTest( {
 })
 
 
-# RunTest( {
-#             acceptable_error <- 0.1
-#             G1 <- G2 <- list()
-#             for (i in 1:20){
-#                 G1[[i]] <- igraph::sample_gnp(n=50, p=0.5, directed=TRUE)
-#                 G2[[i]] <- igraph::sample_gnp(n=50, p=0.3, directed=TRUE)
-#             }
-#             result <- takahashi.test(G1, G2, maxBoot=100, directed=TRUE, distance="L2", npoints=200)
-#             test_that("takahashi.test", {
-#                           expect_lt(result$p.value, acceptable_error)
-#             })
-# })
+RunTest( {
+  acceptable_error <- 0.01
+  G1 <- G2 <- list()
+  for (i in 1:20){
+    G1[[i]] <- igraph::sample_gnp(n=100, p=0.5, directed=TRUE)
+    G2[[i]] <- igraph::sample_gnp(n=100, p=0.6, directed=TRUE)
+  }
+  result <- graph.takahashi.test(G1, G2, maxBoot=1000)
+  test_that("graph.takahashi.test is working.", {
+    expect_lt(result$p.value, acceptable_error)
+  })
+})

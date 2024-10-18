@@ -14,7 +14,7 @@ RunTest({
             }
             G <- c(g1, g2, g3)
             label <- c(rep(1, 20), rep(2, 20), rep(3, 20))
-            result <- anogva(G, label, maxBoot=100, directed=FALSE)
+            result <- anogva(G, label, maxBoot=100)
             test_that("Anogva with undirected graphs.", {
                 expect_lt(result$p.value, acceptable_error)
                 })
@@ -24,13 +24,13 @@ RunTest({
             acceptable_error <- 0.1
             g1 <- g2 <- g3 <- list()
             for (i in 1:20){
-                g1[[i]] <- igraph::sample_gnp(50, 0.50, directed=TRUE)
-                g2[[i]] <- igraph::sample_gnp(50, 0.50, directed=TRUE)
-                g3[[i]] <- igraph::sample_gnp(50, 0.32, directed=TRUE)
+                g1[[i]] <- igraph::sample_gnp(50, 0.50)
+                g2[[i]] <- igraph::sample_gnp(50, 0.50)
+                g3[[i]] <- igraph::sample_gnp(50, 0.32)
             }
             G <- c(g1, g2, g3)
             label <- c(rep(1, 20), rep(2, 20), rep(3, 20))
-            result <- anogva(G, label, maxBoot=50, directed=TRUE, npoints=200)
+            result <- anogva(G, label, maxBoot=50, npoints=200)
             test_that("Anogva with directed graphs.", {
                 expect_lt(result$p.value, acceptable_error)
                })
@@ -46,7 +46,7 @@ RunTest({
             }
             G <- c(g1, g2, g3)
             label <- c(rep(1, 20), rep(2, 20), rep(3, 20))
-            result <- anogva(G, label, maxBoot=100, directed=FALSE)
+            result <- anogva(G, label, maxBoot=100)
             test_that("Anogva with undirected graphs.", {
                 expect_lt(result$p.value, acceptable_error)
                 })
@@ -56,16 +56,32 @@ RunTest({
             acceptable_error <- 0.01
             g1 <- g2 <- g3 <- list()
             for (i in 1:20){
-                g1[[i]] <- igraph::sample_gnp(100, 0.50, directed=TRUE)
-                g2[[i]] <- igraph::sample_gnp(100, 0.50, directed=TRUE)
-                g3[[i]] <- igraph::sample_gnp(100, 0.32, directed=TRUE)
+                g1[[i]] <- igraph::sample_gnp(100, 0.50)
+                g2[[i]] <- igraph::sample_gnp(100, 0.50)
+                g3[[i]] <- igraph::sample_gnp(100, 0.32)
             }
             G <- c(g1, g2, g3)
             label <- c(rep(1, 20), rep(2, 20), rep(3, 20))
-            result <- anogva(G, label, maxBoot=50, directed=TRUE, npoints=200)
+            result <- anogva(G, label, maxBoot=50, npoints=200)
             test_that("Anogva with directed graphs.", {
                 expect_lt(result$p.value, acceptable_error)
                })
+})
+
+RunTest({
+  acceptable_error <- 0.01
+  g1 <- g2 <- g3 <- list()
+  for (i in 1:20){
+    g1[[i]] <- igraph::sample_gnp(100, 0.50, directed = TRUE)
+    g2[[i]] <- igraph::sample_gnp(100, 0.50, directed = TRUE)
+    g3[[i]] <- igraph::sample_gnp(100, 0.32, directed = TRUE)
+  }
+  G <- c(g1, g2, g3)
+  label <- c(rep(1, 20), rep(2, 20), rep(3, 20))
+  result <- anogva(G, label, maxBoot=50, npoints=200)
+  test_that("Anogva with directed graphs.", {
+    expect_lt(result$p.value, acceptable_error)
+  })
 })
 
 

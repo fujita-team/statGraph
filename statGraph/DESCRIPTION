@@ -11,7 +11,8 @@ Authors@R: c(
     person("Andre", "Fujita", email="andrefujita@usp.br", role=c("aut", "cre")))
 Maintainer: Andre Fujita <andrefujita@usp.br>
 Depends: R (>= 4.3.0), stats, graphics
-Imports: igraph, MASS, rARPACK, cluster, foreach, parallel, doParallel, methods, mvtnorm
+Imports: igraph, MASS, rARPACK, cluster, foreach, parallel, doParallel, methods, mvtnorm, ks
+Suggests: mclust
 Description: Contains statistical methods to analyze graphs, such as graph parameter estimation, 
     model selection based on the Graph Information Criterion, statistical tests to discriminate two or more populations of graphs, 
     correlation between graphs, and clustering of graphs.
